@@ -80,4 +80,12 @@ layout = html.Div(className="main", children=[
         className='main-options'
     ),
 
+
+    html.Section(
+        dcc.Graph(
+            id='cryptocurrency-graph',
+        ),
+        className='graph-container'
+    ),
+
 ])

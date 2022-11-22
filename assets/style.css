@@ -60,6 +60,11 @@ body {
     font-size: 15px;
 }
 
+.graph-container{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 
 @media (max-width: 870px){
 
@@ -77,4 +82,7 @@ body {
         min-width: 130px;
     }
 }
+
+
+
 
