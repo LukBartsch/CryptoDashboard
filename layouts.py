@@ -1,5 +1,7 @@
 
 from dash import html, dcc
+import dash_daq as daq
+
 from datetime import datetime, timedelta
 
 # from common import COLORS
@@ -86,6 +88,22 @@ layout = html.Div(className="main", children=[
             id='crypto-graph',
         ),
         className='graph-container'
+    ),
+
+
+
+    html.Section(
+        html.Div([
+            daq.Gauge(
+                id='fear_greed_index',
+                color={"gradient":True,"ranges":{"red":[0,33],"yellow":[33,66],"green":[66,100]}},
+                value=100,
+                showCurrentValue=True,
+                label='Fear and Greed Index ',
+                max=100,
+                min=0,
+            )
+        ])
     ),
 
 ])

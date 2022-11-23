@@ -63,6 +63,6 @@ def display_time_series(crypto_dropdown):
     fig = px.line(df, x = 'date', y=crypto_dropdown)
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
-    fig.update_xaxes(visible=False)
-    fig.update_yaxes(visible=False)
+    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.update_yaxes(showgrid=False, zeroline=False)
     return fig
