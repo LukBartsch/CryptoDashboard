@@ -34,7 +34,7 @@ layout = html.Div(className="main", children=[
                 'Select crypto: ',
             ),
             dcc.Dropdown(
-                id='cryptocurrencies-dropdown',
+                id='crypto-dropdown',
                 options=CRYPTO_CURRENCIES,
                 value='bitcoin',
                 multi=True
@@ -83,7 +83,7 @@ layout = html.Div(className="main", children=[
 
     html.Section(
         dcc.Graph(
-            id='cryptocurrency-graph',
+            id='crypto-graph',
         ),
         className='graph-container'
     ),

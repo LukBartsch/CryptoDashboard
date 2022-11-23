@@ -43,7 +43,7 @@ body {
 }
 
 .main-options .select-data #base-currency div,
-.main-options .select-data #cryptocurrencies-dropdown div{
+.main-options .select-data #crypto-dropdown div{
     color: #007eff;
     background-color: #111111;
 }

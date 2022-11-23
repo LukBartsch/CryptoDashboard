@@ -1,4 +1,7 @@
 
+from dash import Input, Output
+import plotly.express as px
+
 import pandas as pd
 import datetime
 import time
@@ -6,6 +9,9 @@ import requests
 import json
 
 from common import CRYPTO_CURRENCIES
+from common import COLORS
+
+from app import app
 
 
 start_time = datetime.datetime(2015, 1, 1)
@@ -46,3 +52,17 @@ for currency in CRYPTO_CURRENCIES:
         # df[currency]=df_temp[currency]
 
 df.to_csv('saved_data/crypto-usd.csv', index=False)
+
+
+
+@app.callback(
+    Output("crypto-graph", "figure"), 
+    Input("crypto-dropdown", "value"))
+def display_time_series(crypto_dropdown):
+    df = pd.read_csv('saved_data/crypto-usd.csv')
+    fig = px.line(df, x = 'date', y=crypto_dropdown)
+    fig.layout.plot_bgcolor = COLORS['background']
+    fig.layout.paper_bgcolor = COLORS['background']
+    fig.update_xaxes(visible=False)
+    fig.update_yaxes(visible=False)
+    return fig
