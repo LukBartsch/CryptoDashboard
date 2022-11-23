@@ -1,5 +1,5 @@
 
-from dash import html, dcc
+from dash import html, dcc, dash_table
 import dash_daq as daq
 
 from datetime import datetime, timedelta
@@ -8,6 +8,20 @@ from datetime import datetime, timedelta
 from common import BASE_CURRENCIES
 from common import CRYPTO_CURRENCIES
 from common import TODAY_DATE
+
+
+from collections import OrderedDict
+
+data = OrderedDict(
+    [
+        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
+        ("Label", ["Fear", "Fear", "Fear", "Fear", "Small Fear"]),
+        ("Value", [22, 23, 25, 27, 45]),
+    ]
+)
+
+import pandas as pd
+df = pd.DataFrame(data)
 
 
 layout = html.Div(className="main", children=[
@@ -93,7 +107,7 @@ layout = html.Div(className="main", children=[
 
 
     html.Section(
-        html.Div([
+        html.Div(
             daq.Gauge(
                 id='fear_greed_index',
                 color={"gradient":True,"ranges":{"red":[0,33],"yellow":[33,66],"green":[66,100]}},
@@ -103,7 +117,29 @@ layout = html.Div(className="main", children=[
                 max=100,
                 min=0,
             )
-        ])
+        )
+    ),
+
+
+
+    html.Section(
+        html.Div(
+            dash_table.DataTable(
+                data = df.to_dict('records'), 
+                columns = [{"name": i, "id": i} for i in df.columns],
+
+                style_header={
+                    'backgroundColor': 'black',
+                    'fontWeight': 'bold'
+                },
+                style_data={
+                    'backgroundColor': 'black'
+                },
+                
+                ),
+
+        ),
+        className='graph-container'
     ),
 
 ])
