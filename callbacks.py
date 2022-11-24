@@ -67,6 +67,25 @@ table_data = OrderedDict(
 df_table_data = pd.DataFrame(table_data)
 
 
+fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
+response = requests.request("GET", fng_url)
+json_data = json.loads(response.text.encode('utf8'))
+data = json_data["data"]
+df_fng = pd.DataFrame(data)
+
+
+table_data = OrderedDict(
+    [
+        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
+        ("Label", [df_fng['value_classification'].loc[0], df_fng['value_classification'].loc[1], df_fng['value_classification'].loc[6], df_fng['value_classification'].loc[29], df_fng['value_classification'].loc[364]]),
+        ("Value", [df_fng['value'].loc[0], df_fng['value'].loc[1], df_fng['value'].loc[6], df_fng['value'].loc[29], df_fng['value'].loc[364]]),
+    ]
+)
+
+df_short_fng = pd.DataFrame(table_data)
+
+
+
 
 @app.callback(
     Output("crypto-graph", "figure"), 

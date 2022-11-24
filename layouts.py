@@ -10,7 +10,7 @@ from common import BASE_CURRENCIES
 from common import CRYPTO_CURRENCIES
 from common import TODAY_DATE
 
-from callbacks import df_table_data
+from callbacks import df_table_data, df_short_fng
 
 
 
@@ -103,7 +103,7 @@ layout = html.Div(className="main", children=[
             daq.Gauge(
                 id='fear_greed_index',
                 color={"gradient":True,"ranges":{"red":[0,33],"yellow":[33,66],"green":[66,100]}},
-                value=100,
+                value=int(df_short_fng['Value'].loc[0]),
                 showCurrentValue=True,
                 label='Fear and Greed Index ',
                 max=100,
@@ -115,8 +115,8 @@ layout = html.Div(className="main", children=[
 
         html.Div(
             dash_table.DataTable(
-                data = df_table_data.to_dict('records'), 
-                columns = [{"name": i, "id": i} for i in df_table_data.columns],
+                data = df_short_fng.to_dict('records'), 
+                columns = [{"name": i, "id": i} for i in df_short_fng.columns],
 
                 style_header={
                     'backgroundColor': 'rgb(30, 30, 30)',
@@ -135,6 +135,18 @@ layout = html.Div(className="main", children=[
                             'column_id': 'Value'
                         },
                         'width': '70px'
+                    },
+                    {
+                        'if': {
+                            'column_id': 'Label'
+                        },
+                        'width': '150px'
+                    },
+                    {
+                        'if': {
+                            'column_id': 'Time'
+                        },
+                        'width': '100px'
                     }
                 ],
                 style_data_conditional=[
