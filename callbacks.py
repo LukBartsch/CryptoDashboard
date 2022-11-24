@@ -55,6 +55,19 @@ df.to_csv('saved_data/crypto-usd.csv', index=False)
 
 
 
+
+from collections import OrderedDict
+table_data = OrderedDict(
+    [
+        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
+        ("Label", ["Extreme Fear", "Fear", "Neutral", "Greed", "Extreme Greed"]),
+        ("Value", [18, 30, 50, 71, 93]),
+    ]
+)
+df_table_data = pd.DataFrame(table_data)
+
+
+
 @app.callback(
     Output("crypto-graph", "figure"), 
     Input("crypto-dropdown", "value"))

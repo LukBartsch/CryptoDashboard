@@ -10,19 +10,10 @@ from common import BASE_CURRENCIES
 from common import CRYPTO_CURRENCIES
 from common import TODAY_DATE
 
+from callbacks import df_table_data
 
-from collections import OrderedDict
 
-data = OrderedDict(
-    [
-        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
-        ("Label", ["Fear", "Fear", "Fear", "Fear", "Small Fear"]),
-        ("Value", [22, 23, 25, 27, 45]),
-    ]
-)
 
-import pandas as pd
-df = pd.DataFrame(data)
 
 
 layout = html.Div(className="main", children=[
@@ -124,17 +115,71 @@ layout = html.Div(className="main", children=[
 
         html.Div(
             dash_table.DataTable(
-                data = df.to_dict('records'), 
-                columns = [{"name": i, "id": i} for i in df.columns],
+                data = df_table_data.to_dict('records'), 
+                columns = [{"name": i, "id": i} for i in df_table_data.columns],
 
                 style_header={
                     'backgroundColor': 'rgb(30, 30, 30)',
-                    'color': 'white'
+                    'color': 'white',
+                    'text-align': 'center',
+                    'display': 'none'
                 },
                 style_data={
                     'backgroundColor': 'rgb(50, 50, 50)',
-                    'color': 'white'
+                    'color': 'white',
+                    'text-align': 'center'
                 },
+                style_cell_conditional=[
+                    {
+                        'if': {
+                            'column_id': 'Value'
+                        },
+                        'width': '70px'
+                    }
+                ],
+                style_data_conditional=[
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 0 && {Value} <= 20',
+                            'column_id': 'Value'
+                        },
+                        'backgroundColor': 'tomato',
+                        'color': 'white'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 20 && {Value} <= 40',
+                            'column_id': 'Value'
+                        },
+                        'backgroundColor': 'rgba(206, 140, 104, 1)',
+                        'color': 'white'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 40 && {Value} <= 60',
+                            'column_id': 'Value'
+                        },
+                        'backgroundColor': 'rgb(220, 220, 7)',
+                        'color': 'white'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 60 && {Value} <= 80',
+                            'column_id': 'Value'
+                        },
+                        'backgroundColor': 'rgb(41, 183, 41)',
+                        'color': 'white'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 80 && {Value} <= 100',
+                            'column_id': 'Value'
+                        },
+                        'backgroundColor': 'rgb(8, 130, 8)',
+                        'color': 'white'
+                    },
+                ]
+                    
             ),
             className='fng-part-data'
         ),
