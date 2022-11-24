@@ -82,6 +82,13 @@ body {
 }
 
 
+.collaps-button-area {
+    background-color: rgb(30, 30, 30) !important;
+    color: white;
+    font-size: 12px;
+}
+
+
 
 
 @media (max-width: 870px){

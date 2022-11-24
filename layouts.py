@@ -128,12 +128,13 @@ layout = html.Div(className="main", children=[
                 columns = [{"name": i, "id": i} for i in df.columns],
 
                 style_header={
-                    'backgroundColor': 'black',
-                    'fontWeight': 'bold'
+                    'backgroundColor': 'rgb(30, 30, 30)',
+                    'color': 'white'
                 },
                 style_data={
-                    'backgroundColor': 'black'
-                }, 
+                    'backgroundColor': 'rgb(50, 50, 50)',
+                    'color': 'white'
+                },
             ),
             className='fng-part-data'
         ),
@@ -148,7 +149,9 @@ layout = html.Div(className="main", children=[
                 n_clicks=0,
             ),
             dbc.Collapse(
-                dbc.Card(dbc.CardBody("The crypto market behaviour is very emotional. People tend to get greedy when the market is rising which results in FOMO (Fear of missing out). Also, people often sell their coins in irrational reaction of seeing red numbers. With our Fear and Greed Index, we try to save you from your own emotional overreactions. Therefore, we analyze the current sentiment of the Bitcoin market and crunch the numbers into a simple meter from 0 to 100. Zero means 'Extreme Fear', while 100 means 'Extreme Greed'.")),
+                dbc.Card(dbc.CardBody("The crypto market behaviour is very emotional. People tend to get greedy when the market is rising which results in FOMO (Fear of missing out). Also, people often sell their coins in irrational reaction of seeing red numbers. With our Fear and Greed Index, we try to save you from your own emotional overreactions. Therefore, we analyze the current sentiment of the Bitcoin market and crunch the numbers into a simple meter from 0 to 100. Zero means 'Extreme Fear', while 100 means 'Extreme Greed'."),
+                    className="collaps-button-area"
+                ),
                     id="collapse",
                     is_open=False,
                 ),
