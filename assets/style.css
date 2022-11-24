@@ -66,6 +66,23 @@ body {
 }
 
 
+.main-fng-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 50px 0px;
+    padding: 20px 0;
+}
+
+.main-fng-box .fng-part-data {
+    max-width: 300px;
+}
+
+
+
 
 @media (max-width: 870px){
 

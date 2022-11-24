@@ -1,6 +1,7 @@
 
 from dash import html, dcc, dash_table
 import dash_daq as daq
+import dash_bootstrap_components as dbc
 
 from datetime import datetime, timedelta
 
@@ -106,7 +107,7 @@ layout = html.Div(className="main", children=[
 
 
 
-    html.Section(
+    html.Section(children=[
         html.Div(
             daq.Gauge(
                 id='fear_greed_index',
@@ -116,13 +117,11 @@ layout = html.Div(className="main", children=[
                 label='Fear and Greed Index ',
                 max=100,
                 min=0,
-            )
-        )
-    ),
+            ),
+            className='fng-part-data'
+        ),
 
 
-
-    html.Section(
         html.Div(
             dash_table.DataTable(
                 data = df.to_dict('records'), 
@@ -134,12 +133,35 @@ layout = html.Div(className="main", children=[
                 },
                 style_data={
                     'backgroundColor': 'black'
-                },
-                
-                ),
-
+                }, 
+            ),
+            className='fng-part-data'
         ),
-        className='graph-container'
+
+
+        html.Div(children=[
+            dbc.Button(
+                "What is Fear and Greed Index?",
+                id="collapse-button",
+                className="mb-3",
+                color="primary",
+                n_clicks=0,
+            ),
+            dbc.Collapse(
+                dbc.Card(dbc.CardBody("The crypto market behaviour is very emotional. People tend to get greedy when the market is rising which results in FOMO (Fear of missing out). Also, people often sell their coins in irrational reaction of seeing red numbers. With our Fear and Greed Index, we try to save you from your own emotional overreactions. Therefore, we analyze the current sentiment of the Bitcoin market and crunch the numbers into a simple meter from 0 to 100. Zero means 'Extreme Fear', while 100 means 'Extreme Greed'.")),
+                    id="collapse",
+                    is_open=False,
+                ),
+            ],
+            className='fng-part-data'
+        ),
+
+    ],
+        className='main-fng-box'
     ),
 
+
+
 ])
+
+
