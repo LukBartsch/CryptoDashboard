@@ -112,27 +112,23 @@ def toggle_collapse(n, is_open):
 
 
 
-# @app.callback(
-#     Output("fng-line-graph", "figure"))
-# def display_fng_series():
-#     fig = px.line(df, x = 'date', y='bitcoin')
-#     fig.layout.plot_bgcolor = COLORS['background']
-#     fig.layout.paper_bgcolor = COLORS['background']
-#     fig.update_xaxes(showgrid=False, zeroline=False)
-#     fig.update_yaxes(showgrid=False, zeroline=False)
-#     return fig
-
-
-
 @app.callback(
     Output("fng-line-graph", "figure"), 
     Input("checklist", "value"))
-def display_new_series(name):
-    df = pd.read_csv('saved_data/crypto-usd.csv')
+def display_new_series(time_range):
 
-    fig = px.line(df_fng, x = 'timestamp', y='value')
+    
+
+    if time_range=="Last Week":
+        df_cut = df_fng[:6]
+    elif time_range=="Last Month":
+        df_cut = df_fng[:29]
+    else:
+        df_cut = df_fng
+
+    fig = px.line(df_cut, x = 'timestamp', y='value')
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
-    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.update_xaxes(showgrid=False, zeroline=False, autorange="reversed")
     fig.update_yaxes(showgrid=False, zeroline=False)
     return fig

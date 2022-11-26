@@ -238,12 +238,21 @@ layout = html.Div(className="main", children=[
 
     html.Section(children=[
         html.Div([
-            dcc.Checklist(
-                    id="checklist",
-                    options=["Asia", "Europe", "Africa","Americas","Oceania"],
-                    value=["Americas", "Oceania"],
-                    inline=True
+        
+
+            html.Div(children=[
+                html.Label(
+                    'Select time range: ',
                 ),
+                dcc.Dropdown(
+                    id='checklist',
+                    options= ['Last Week', 'Last Month','Last Year'],
+                    value = "Last Month",
+                ),
+            ],
+                className='select-data higher-width'
+            ),
+
             dcc.Graph(id="fng-line-graph")
             ])
         ],

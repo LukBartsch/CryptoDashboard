@@ -33,23 +33,29 @@ body {
     width: 150px;
 }
 
-.main-options .higher-width{
+.main-options .higher-width,
+.graph-container .higher-width
+{
     width: 300px;
 }
 
-.main-options .select-data label{
+.main-options .select-data label,
+.graph-container .select-data label
+{
     display: block;
     padding-bottom: 10px;
     font-size: 1.05rem;
 }
 
 .main-options .select-data #base-currency div,
-.main-options .select-data #crypto-dropdown div{
+.main-options .select-data #crypto-dropdown div,
+.graph-container .select-data #checklist div{
     color: #007eff;
     background-color: #111111;
 }
 
-.main-options .select-data .Select.has-value.Select--single > .Select-control .Select-value .Select-value-label{
+.main-options .select-data .Select.has-value.Select--single > .Select-control .Select-value .Select-value-label,
+.graph-container .select-data .Select.has-value.Select--single > .Select-control .Select-value .Select-value-label{
     color: #007eff;
 }
 
@@ -87,25 +93,41 @@ body {
 .collaps-button-area {
     background-color: rgb(30, 30, 30) !important;
     color: white;
-    font-size: 12px;
+    font-size: 14px;
 }
+
+
+.graph-container .select-data{
+    min-width: 100px;
+    display: block;
+    height: auto;
+    margin: auto;
+    text-align: center;
+}
+
 
 
 
 
 @media (max-width: 870px){
 
-    .main-options .select-data{
+    .main-options .select-data,
+    .graph-container .select-data
+    {
         display: block;
         margin: 0 auto;
         margin-bottom: 20px;
     }
 
-    .main-options .select-data {
+    .main-options .select-data,
+    .graph-container .select-data 
+    {
         min-width: 300px;
     }
 
-    .main-options .select-data #base-currency{
+    .main-options .select-data #base-currency,
+    .graph-container .select-data #checklist
+    {
         min-width: 130px;
     }
 }
