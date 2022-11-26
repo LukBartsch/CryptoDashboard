@@ -21,9 +21,10 @@ unix_start_time = time.mktime(start_time.timetuple())*1000
 unix_end_time = time.mktime(end_time.timetuple())*1000
 
 
+
+##### Prepare data for main line charts with crypto #####################################
+
 currency = 'bitcoin'
-
-
 
 for currency in CRYPTO_CURRENCIES:
 
@@ -56,16 +57,11 @@ df.to_csv('saved_data/crypto-usd.csv', index=False)
 
 
 
-from collections import OrderedDict
-table_data = OrderedDict(
-    [
-        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
-        ("Label", ["Extreme Fear", "Fear", "Neutral", "Greed", "Extreme Greed"]),
-        ("Value", [18, 30, 50, 71, 93]),
-    ]
-)
-df_table_data = pd.DataFrame(table_data)
 
+
+##### Prepare data for fear and greed index #####################################
+
+from collections import OrderedDict
 
 fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
 response = requests.request("GET", fng_url)
@@ -73,16 +69,20 @@ json_data = json.loads(response.text.encode('utf8'))
 data = json_data["data"]
 df_fng = pd.DataFrame(data)
 
+df_fng_temp = df_fng.loc[[0,1,6,29,364]]
 
-table_data = OrderedDict(
+labels_list = [label for label in df_fng_temp['value_classification']]
+values_list = [value for value in df_fng_temp['value']]
+
+fng_table_data = OrderedDict(
     [
         ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
-        ("Label", [df_fng['value_classification'].loc[0], df_fng['value_classification'].loc[1], df_fng['value_classification'].loc[6], df_fng['value_classification'].loc[29], df_fng['value_classification'].loc[364]]),
-        ("Value", [df_fng['value'].loc[0], df_fng['value'].loc[1], df_fng['value'].loc[6], df_fng['value'].loc[29], df_fng['value'].loc[364]]),
+        ("Label", labels_list),
+        ("Value", values_list),
     ]
 )
+df_short_fng = pd.DataFrame(fng_table_data)
 
-df_short_fng = pd.DataFrame(table_data)
 
 
 

@@ -10,7 +10,7 @@ from common import BASE_CURRENCIES
 from common import CRYPTO_CURRENCIES
 from common import TODAY_DATE
 
-from callbacks import df_table_data, df_short_fng
+from callbacks import df_short_fng
 
 
 
@@ -152,7 +152,7 @@ layout = html.Div(className="main", children=[
                 style_data_conditional=[
                     {
                         'if': {
-                            'filter_query': '{Value} > 0 && {Value} <= 20',
+                            'filter_query': '{Value} > 0 && {Value} <= 25',
                             'column_id': 'Value'
                         },
                         'backgroundColor': 'tomato',
@@ -160,7 +160,7 @@ layout = html.Div(className="main", children=[
                     },
                     {
                         'if': {
-                            'filter_query': '{Value} > 20 && {Value} <= 40',
+                            'filter_query': '{Value} > 25 && {Value} < 50',
                             'column_id': 'Value'
                         },
                         'backgroundColor': 'rgba(206, 140, 104, 1)',
@@ -168,7 +168,7 @@ layout = html.Div(className="main", children=[
                     },
                     {
                         'if': {
-                            'filter_query': '{Value} > 40 && {Value} <= 60',
+                            'filter_query': '{Value} = 50',
                             'column_id': 'Value'
                         },
                         'backgroundColor': 'rgb(220, 220, 7)',
@@ -176,7 +176,7 @@ layout = html.Div(className="main", children=[
                     },
                     {
                         'if': {
-                            'filter_query': '{Value} > 60 && {Value} <= 80',
+                            'filter_query': '{Value} > 50 && {Value} <= 75',
                             'column_id': 'Value'
                         },
                         'backgroundColor': 'rgb(41, 183, 41)',
@@ -184,7 +184,7 @@ layout = html.Div(className="main", children=[
                     },
                     {
                         'if': {
-                            'filter_query': '{Value} > 80 && {Value} <= 100',
+                            'filter_query': '{Value} > 75 && {Value} <= 100',
                             'column_id': 'Value'
                         },
                         'backgroundColor': 'rgb(8, 130, 8)',
