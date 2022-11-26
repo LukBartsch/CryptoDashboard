@@ -190,14 +190,68 @@ layout = html.Div(className="main", children=[
                         'backgroundColor': 'rgb(8, 130, 8)',
                         'color': 'white'
                     },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 0 && {Value} <= 25',
+                            'column_id': 'Label'
+                        },
+                        'color': 'tomato'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 25 && {Value} < 50',
+                            'column_id': 'Label'
+                        },
+                        'color': 'rgba(206, 140, 104, 1)'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} = 50',
+                            'column_id': 'Label'
+                        },
+                        'color': 'rgb(220, 220, 7)'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 50 && {Value} <= 75',
+                            'column_id': 'Label'
+                        },
+                        'color': 'rgb(41, 183, 41)'
+                    },
+                    {
+                        'if': {
+                            'filter_query': '{Value} > 75 && {Value} <= 100',
+                            'column_id': 'Label'
+                        },
+                        'color': 'rgb(8, 130, 8)'
+                    },
                 ]
                     
             ),
             className='fng-part-data'
         ),
 
+    ],
+        className='main-fng-box'
+    ),
 
-        html.Div(children=[
+
+    html.Section(children=[
+        html.Div([
+            dcc.Checklist(
+                    id="checklist",
+                    options=["Asia", "Europe", "Africa","Americas","Oceania"],
+                    value=["Americas", "Oceania"],
+                    inline=True
+                ),
+            dcc.Graph(id="fng-line-graph")
+            ])
+        ],
+        className='graph-container'
+    ),
+
+
+    html.Div(children=[
             dbc.Button(
                 "What is Fear and Greed Index?",
                 id="collapse-button",
@@ -213,12 +267,8 @@ layout = html.Div(className="main", children=[
                     is_open=False,
                 ),
             ],
-            className='fng-part-data'
-        ),
-
-    ],
-        className='main-fng-box'
-    ),
+            className='main-fng-box'
+        )
 
 
 

@@ -100,9 +100,6 @@ def display_time_series(crypto_dropdown):
     return fig
 
 
-
-
-
 @app.callback(
     Output("collapse", "is_open"),
     [Input("collapse-button", "n_clicks")],
@@ -112,3 +109,30 @@ def toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
+
+
+
+# @app.callback(
+#     Output("fng-line-graph", "figure"))
+# def display_fng_series():
+#     fig = px.line(df, x = 'date', y='bitcoin')
+#     fig.layout.plot_bgcolor = COLORS['background']
+#     fig.layout.paper_bgcolor = COLORS['background']
+#     fig.update_xaxes(showgrid=False, zeroline=False)
+#     fig.update_yaxes(showgrid=False, zeroline=False)
+#     return fig
+
+
+
+@app.callback(
+    Output("fng-line-graph", "figure"), 
+    Input("checklist", "value"))
+def display_new_series(name):
+    df = pd.read_csv('saved_data/crypto-usd.csv')
+
+    fig = px.line(df_fng, x = 'timestamp', y='value')
+    fig.layout.plot_bgcolor = COLORS['background']
+    fig.layout.paper_bgcolor = COLORS['background']
+    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.update_yaxes(showgrid=False, zeroline=False)
+    return fig

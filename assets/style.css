@@ -76,12 +76,13 @@ body {
     border-collapse: separate;
     border-spacing: 50px 0px;
     padding: 20px 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .main-fng-box .fng-part-data {
     max-width: 300px;
 }
-
 
 .collaps-button-area {
     background-color: rgb(30, 30, 30) !important;
