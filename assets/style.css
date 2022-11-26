@@ -105,6 +105,11 @@ body {
     text-align: center;
 }
 
+.tabs-menu {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 
 
 
