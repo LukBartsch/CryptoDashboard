@@ -21,6 +21,9 @@ unix_start_time = time.mktime(start_time.timetuple())*1000
 unix_end_time = time.mktime(end_time.timetuple())*1000
 
 
+api_key_taapi = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVlIjoiNjM4MzdjYzRmYzVhOGFkZmVjOThmYzkwIiwiaWF0IjoxNjY5NTYxNTYzLCJleHAiOjMzMTc0MDI1NTYzfQ.bTCaTJl_t4geJvNSeC8Cc9kTnfNflXND06p_PE8aFyY'
+
+
 
 ##### Prepare data for main line charts with crypto #####################################
 
@@ -86,6 +89,22 @@ df_short_fng = pd.DataFrame(fng_table_data)
 
 
 
+###### Preapre data for RSI indicator #######
+
+api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
+
+rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=100'
+response = requests.request("GET", rsi_url)
+json_data = json.loads(response.text.encode('utf8'))
+data = json_data["results"]["values"]
+df_rsi = pd.DataFrame(data)
+
+df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
+
+
+
+
+
 
 @app.callback(
     Output("crypto-graph", "figure"), 
@@ -132,5 +151,21 @@ def display_new_series(time_range):
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False, autorange="reversed")
+    fig.update_yaxes(showgrid=False, zeroline=False)
+    return fig
+
+
+
+
+
+@app.callback(
+    Output("rsi-line-graph", "figure"), 
+    Input("rsi-checklist", "value"))
+def display_rsi_series(time_range):
+
+    fig = px.scatter(df_rsi, x="timestamp", y="value", color="value")
+    fig.layout.plot_bgcolor = COLORS['background']
+    fig.layout.paper_bgcolor = COLORS['background']
+    fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(showgrid=False, zeroline=False)
     return fig
