@@ -107,10 +107,8 @@ body {
 
 .tabs-menu {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto;
 }
-
-
 
 
 
@@ -134,6 +132,10 @@ body {
     .graph-container .select-data #checklist
     {
         min-width: 130px;
+    }
+
+    .tabs-menu {
+        max-width: 70%;
     }
 }
 

@@ -157,7 +157,7 @@ fng_index_line_graph = (
                 ),
                 dcc.Dropdown(
                     id='checklist',
-                    options= ['Last Week', 'Last Month','Last Year'],
+                    options= ['Last Week', 'Last Month', 'Last Six Month', 'Last Year'],
                     value = "Last Month",
                 ),
             ],

@@ -123,6 +123,8 @@ def display_new_series(time_range):
         df_cut = df_fng[:6]
     elif time_range=="Last Month":
         df_cut = df_fng[:29]
+    elif time_range=="Last Six Month":
+        df_cut = df_fng[:179]
     else:
         df_cut = df_fng
 
