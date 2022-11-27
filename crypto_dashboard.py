@@ -1,5 +1,5 @@
 from app import app
-from layouts import layout
+from layout.main_layout import layout
 import callbacks
 
 
