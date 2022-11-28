@@ -119,6 +119,62 @@ def display_time_series(crypto_dropdown):
     return fig
 
 
+
+
+@app.callback(
+    Output('table-header', 'children'),
+    [Input('base-currency', 'value')]
+)
+def create_table_header(base_currency):
+    return f'Last five rates of {base_currency}'
+
+
+
+
+@app.callback(
+    [Output('currency-table', 'columns'),
+     Output('currency-table', 'data')],
+    [Input('crypto-dropdown', 'value')]
+)
+def create_table(currencies):
+
+    # df = pd.read_csv('saved_data/crypto-usd.csv')
+    # limit_to_five = df[-5:]
+
+    # columns = [{'name': 'Crypto', 'id': 'currency'}]
+    # date_columns = [
+    #     {'name': 1, 'id': 2}
+    #     for data in limit_to_five['date']]
+    # columns.extend(date_columns)
+
+    # rows = []
+    # for currency in currencies:
+    #     single_row = {
+    #         'currency': currency
+    #     }
+    #     for rate, date in zip(limit_to_five['currency'], date_columns):
+    #         date_column = date['id']
+    #         try:
+    #             single_row[date_column] = 1 / rate[currency]
+    #         except KeyError:
+    #             single_row[date_column] = 1
+    #     rows.append(single_row)
+
+
+    df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
+
+    data = df.to_dict('records')
+    columns = [{"name": i, "id": i} for i in df.columns]
+
+
+    # print(data)
+    # print(columns)
+
+    return columns, data
+
+
+
+
 @app.callback(
     Output("fng-collapse", "is_open"),
     [Input("fng-collapse-button", "n_clicks")],
@@ -135,8 +191,6 @@ def fng_toggle_collapse(n, is_open):
     Output("fng-line-graph", "figure"), 
     Input("fng-checklist", "value"))
 def display_new_series(time_range):
-
-    
 
     if time_range=="Last Week":
         df_cut = df_fng[:6]

@@ -144,3 +144,34 @@ body {
 
 
 
+
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.container #currency-table{
+    padding-bottom: 40px;
+}
+
+.container #currency-table table{
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.container #table-header {
+    margin: auto;
+}
+
+@media (max-width: 900px){
+    .container #currency-table{
+        overflow-x: scroll;
+    }
+}
+
+
+
+
