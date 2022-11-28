@@ -49,7 +49,8 @@ body {
 
 .main-options .select-data #base-currency div,
 .main-options .select-data #crypto-dropdown div,
-.graph-container .select-data #checklist div{
+.graph-container .select-data #fng-checklist div,
+.graph-container .select-data #rsi-checklist div{
     color: #007eff;
     background-color: #111111;
 }
@@ -129,7 +130,8 @@ body {
     }
 
     .main-options .select-data #base-currency,
-    .graph-container .select-data #checklist
+    .graph-container .select-data #fng-checklist,
+    .graph-container .select-data #rsi-checklist
     {
         min-width: 130px;
     }

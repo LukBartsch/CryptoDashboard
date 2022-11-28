@@ -156,7 +156,7 @@ fng_index_line_graph = (
                     'Select time range: ',
                 ),
                 dcc.Dropdown(
-                    id='checklist',
+                    id='fng-checklist',
                     options= ['Last Week', 'Last Month', 'Last Six Month', 'Last Year'],
                     value = "Last Month",
                 ),
@@ -176,16 +176,16 @@ fng_index_info = (
     html.Div(children=[
             dbc.Button(
                 "What is Fear and Greed Index?",
-                id="collapse-button",
+                id="fng-collapse-button",
                 className="mb-3",
                 color="primary",
                 n_clicks=0,
             ),
             dbc.Collapse(
-                dbc.Card(dbc.CardBody("The crypto market behaviour is very emotional. People tend to get greedy when the market is rising which results in FOMO (Fear of missing out). Also, people often sell their coins in irrational reaction of seeing red numbers. With our Fear and Greed Index, we try to save you from your own emotional overreactions. Therefore, we analyze the current sentiment of the Bitcoin market and crunch the numbers into a simple meter from 0 to 100. Zero means 'Extreme Fear', while 100 means 'Extreme Greed'."),
+                dbc.Card(dbc.CardBody("The Fear and Greed Index is a well-known indicator that determines the current mood on the cryptocurrency market, and more specifically on the bitcoin market. Behaviors in the crypto market are highly emotional, people become more greedy as the market grows, which in turn often causes FOMO (fear of what is missing). On the other hand, people often irrationally sell their crypto assets when the charts turn red. It is against such reactions that the Fear and Greed Index is designed to protect you. Value 0 means 'extreme fear' and a value of 100 means 'extreme greed'."),
                     className="collaps-button-area"
                 ),
-                    id="collapse",
+                    id="fng-collapse",
                     is_open=False,
                 ),
             ],

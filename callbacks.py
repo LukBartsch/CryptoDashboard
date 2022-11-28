@@ -93,7 +93,7 @@ df_short_fng = pd.DataFrame(fng_table_data)
 
 api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
-rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=100'
+rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
 response = requests.request("GET", rsi_url)
 json_data = json.loads(response.text.encode('utf8'))
 data = json_data["results"]["values"]
@@ -120,11 +120,11 @@ def display_time_series(crypto_dropdown):
 
 
 @app.callback(
-    Output("collapse", "is_open"),
-    [Input("collapse-button", "n_clicks")],
-    [State("collapse", "is_open")],
+    Output("fng-collapse", "is_open"),
+    [Input("fng-collapse-button", "n_clicks")],
+    [State("fng-collapse", "is_open")],
 )
-def toggle_collapse(n, is_open):
+def fng_toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
@@ -133,7 +133,7 @@ def toggle_collapse(n, is_open):
 
 @app.callback(
     Output("fng-line-graph", "figure"), 
-    Input("checklist", "value"))
+    Input("fng-checklist", "value"))
 def display_new_series(time_range):
 
     
@@ -163,9 +163,30 @@ def display_new_series(time_range):
     Input("rsi-checklist", "value"))
 def display_rsi_series(time_range):
 
-    fig = px.scatter(df_rsi, x="timestamp", y="value", color="value")
+    if time_range=="Last Week":
+        df_cut = df_rsi[:6]
+    elif time_range=="Last Month":
+        df_cut = df_rsi[:29]
+    elif time_range=="Last Six Month":
+        df_cut = df_rsi[:179]
+    else:
+        df_cut = df_rsi
+
+    fig = px.scatter(df_cut, x="timestamp", y="value", color="value", 
+                color_continuous_scale=["red", "yellow", "green"], title = "Example of RSI for AAPL indicator")
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(showgrid=False, zeroline=False)
     return fig
+
+
+@app.callback(
+    Output("rsi-collapse", "is_open"),
+    [Input("rsi-collapse-button", "n_clicks")],
+    [State("rsi-collapse", "is_open")],
+)
+def rsi_toggle_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open

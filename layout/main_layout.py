@@ -3,7 +3,7 @@ from dash import html, dcc
 
 from layout.crypto_section import main_crypto_title, crypto_and_date_section, crypto_graph
 from layout.fear_and_greed_index import fng_index_table, fng_index_line_graph, fng_index_info
-from layout.rsi_indicator import rsi_index_line_graph
+from layout.rsi_indicator import rsi_index_line_graph, rsi_index_info
 
 
 
@@ -53,11 +53,8 @@ layout = html.Div(className="main", children=[
         ),
 
         dcc.Tab(label='Relative Strength Index', children=[
-            html.H1(
-                children="Second tab will be soon...",
-                className="main-header"
-            ),
-            rsi_index_line_graph
+            rsi_index_line_graph,
+            rsi_index_info
         ],
         style={
                 'backgroundColor': 'rgb(50, 50, 50)',
