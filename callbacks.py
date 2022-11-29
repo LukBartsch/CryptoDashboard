@@ -126,7 +126,7 @@ def display_time_series(crypto_dropdown):
     [Input('base-currency', 'value')]
 )
 def create_table_header(base_currency):
-    return f'Last five rates of {base_currency}'
+    return f'Ranking ten most popular cryptocurrencies'
 
 
 
@@ -161,10 +161,67 @@ def create_table(currencies):
     #     rows.append(single_row)
 
 
-    df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
+    coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
-    data = df.to_dict('records')
-    columns = [{"name": i, "id": i} for i in df.columns]
+    response = requests.request("GET", coincapapi_url)
+    json_data = json.loads(response.text.encode('utf8'))
+    assets = json_data["data"]
+    df_assets = pd.DataFrame(assets)
+
+
+
+    crypto_symbols = list(df_assets['symbol'])
+    crypto_names = list(df_assets['id'])
+
+    crypto_url_logo_names = []
+    for index in range(len(crypto_names)):
+        crypto_url_logo_names.append(crypto_names[index]+"-"+crypto_symbols[index].lower())
+
+    # print(crypto_symbols)
+    # print(crypto_url_logo_names)
+
+    markdown_urls = []
+
+    for logo_name in crypto_url_logo_names:
+        markdown_urls.append(f"[![Coin](https://cryptologos.cc/logos/{logo_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)")
+
+    # print(markdown_urls)
+
+    
+    # crypto_logo = f"[![{symbol}](https://cryptologos.cc/logos/{crypto_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)"
+
+    df = pd.DataFrame(
+    dict(
+        [
+            ("Pos", [pos+1 for pos in range(len(crypto_names))]),
+            ("Logo", [url for url in markdown_urls]),
+            ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
+            ("Symbol", [symbol for symbol in crypto_symbols]),
+            ("Price", [price for price in list(df_assets['priceUsd'])]),
+            ("Change24h[%]", [change for change in list(df_assets['changePercent24Hr'])]),
+        ]
+    )
+    )
+
+
+    data=df.to_dict("records")
+    columns=[
+        {"id": "Pos", "name": "Pos"},
+        {"id": "Logo", "name": "Logo", "presentation": "markdown"},
+        {"id": "Crypto Name", "name": "Crypto Name"},
+        {"id": "Symbol", "name": "Symbol"},
+        {"id": "Price", "name": "Price"},
+        {"id": "Change24h[%]", "name": "Change24h[%]"},
+    ]
+
+
+
+    # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
+
+    # print(df)
+
+    # data = df.to_dict('records')
+    # columns = [{"name": i, "id": i} for i in df.columns]
 
 
     # print(data)

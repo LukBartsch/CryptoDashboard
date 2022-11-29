@@ -8,6 +8,9 @@ from layout.current_prices_table import current_prices_table
 
 
 
+
+
+
 layout = html.Div(className="main", children=[
 
     main_crypto_title,
@@ -90,9 +93,7 @@ layout = html.Div(className="main", children=[
     ])
     ],
         className='tabs-menu'
-    ),
-
-
+    )
 ])
 
 
