@@ -287,6 +287,7 @@ def display_rsi_series(time_range):
                 color_continuous_scale=["red", "yellow", "green"], title = "Example of RSI for AAPL indicator")
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
+    fig.update_traces(mode='markers+lines')
     fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(showgrid=False, zeroline=False)
     return fig
