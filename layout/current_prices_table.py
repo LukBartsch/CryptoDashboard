@@ -21,7 +21,8 @@ current_prices_table = (
             style_cell={
                 'padding': '10px',
                 'backgroundColor': COLORS['background'],
-                'color': COLORS['text']
+                'color': COLORS['text'],
+                'textAlign': 'center'
             },
             style_data_conditional=[
                 {
@@ -31,7 +32,14 @@ current_prices_table = (
                     'fontSize': '15px',
                     'color': '#CCF1FF',
                     'textAlign': 'center'
-                }
+                },
+
+                {
+                        'if': {
+                            'column_id': 'Change24h[%]'
+                        },
+                        'color': 'tomato'
+                },
             ]
         ),
     ],

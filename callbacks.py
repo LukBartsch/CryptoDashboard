@@ -3,6 +3,7 @@ from dash import Input, Output, State
 import plotly.express as px
 
 import pandas as pd
+import numpy as np
 import datetime
 import time
 import requests
@@ -186,6 +187,18 @@ def create_table(currencies):
         markdown_urls.append(f"[![Coin](https://cryptologos.cc/logos/{logo_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)")
 
     # print(markdown_urls)
+
+
+    print(df_assets)
+
+    df_assets["priceUsd"] = df_assets['priceUsd'].astype(str).astype(float)
+    df_assets["changePercent24Hr"] = df_assets['changePercent24Hr'].astype(str).astype(float)  
+
+    df_assets["priceUsd"] = np.around(df_assets["priceUsd"], 4)
+    df_assets["changePercent24Hr"] = np.around(df_assets["changePercent24Hr"], 2)
+    
+
+
 
     
     # crypto_logo = f"[![{symbol}](https://cryptologos.cc/logos/{crypto_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)"
