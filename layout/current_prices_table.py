@@ -26,19 +26,24 @@ current_prices_table = (
             },
             style_data_conditional=[
                 {
-                    'if': {
-                        'column_id': 'currency'
-                    },
-                    'fontSize': '15px',
-                    'color': '#CCF1FF',
-                    'textAlign': 'center'
-                },
-
-                {
                         'if': {
+                            'filter_query': '{Change24h[%]} < 0',
                             'column_id': 'Change24h[%]'
                         },
                         'color': 'tomato'
+                },
+                {
+                        'if': {
+                            'filter_query': '{Change24h[%]} > 0',
+                            'column_id': 'Change24h[%]'
+                        },
+                        'color': 'rgb(8, 130, 8)'
+                },
+                {
+                        'if': {
+                            'column_id': 'Logo'
+                        },
+                        'padding-top': '25px'
                 },
             ]
         ),

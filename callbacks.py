@@ -191,11 +191,11 @@ def create_table(currencies):
 
     print(df_assets)
 
-    df_assets["priceUsd"] = df_assets['priceUsd'].astype(str).astype(float)
-    df_assets["changePercent24Hr"] = df_assets['changePercent24Hr'].astype(str).astype(float)  
+    # df_assets["priceUsd"] = df_assets['priceUsd'].astype(str).astype(float)
+    # df_assets["changePercent24Hr"] = df_assets['changePercent24Hr'].astype(str).astype(float)  
 
-    df_assets["priceUsd"] = np.around(df_assets["priceUsd"], 4)
-    df_assets["changePercent24Hr"] = np.around(df_assets["changePercent24Hr"], 2)
+    # df_assets["priceUsd"] = np.around(df_assets["priceUsd"], 4)
+    # df_assets["changePercent24Hr"] = np.around(df_assets["changePercent24Hr"], 2)
     
 
 
@@ -210,8 +210,8 @@ def create_table(currencies):
             ("Logo", [url for url in markdown_urls]),
             ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
             ("Symbol", [symbol for symbol in crypto_symbols]),
-            ("Price", [price for price in list(df_assets['priceUsd'])]),
-            ("Change24h[%]", [change for change in list(df_assets['changePercent24Hr'])]),
+            ("Price", [round(float(price),4) for price in list(df_assets['priceUsd'])]),
+            ("Change24h[%]", [round(float(change),2) for change in list(df_assets['changePercent24Hr'])]),
         ]
     )
     )
