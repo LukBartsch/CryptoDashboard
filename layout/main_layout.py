@@ -20,7 +20,7 @@ layout = html.Div(className="main", children=[
 
     html.Div([
     dcc.Tabs([
-        dcc.Tab(label='Current prices', children=[
+        dcc.Tab(label='Ranking', children=[
             
             current_prices_table
         ],

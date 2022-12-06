@@ -127,7 +127,7 @@ def display_time_series(crypto_dropdown):
     [Input('base-currency', 'value')]
 )
 def create_table_header(base_currency):
-    return f'Ranking ten most popular cryptocurrencies'
+    return f'Ranking of the ten most popular cryptocurrencies'
 
 
 
@@ -163,6 +163,8 @@ def create_table(currencies):
 
 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
+
+    base_currency = "USD"
 
     response = requests.request("GET", coincapapi_url)
     json_data = json.loads(response.text.encode('utf8'))
@@ -210,7 +212,9 @@ def create_table(currencies):
             ("Logo", [url for url in markdown_urls]),
             ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
             ("Symbol", [symbol for symbol in crypto_symbols]),
-            ("Price", [round(float(price),4) for price in list(df_assets['priceUsd'])]),
+            (f"Price[{base_currency}]", [round(float(price),4) for price in list(df_assets['priceUsd'])]),
+            ("Supply", [round(float(supply),2) for supply in list(df_assets['supply'])]),
+            (f"MarketCap[{base_currency}]", [round(float(market_cap),2) for market_cap in list(df_assets['marketCapUsd'])]),
             ("Change24h[%]", [round(float(change),2) for change in list(df_assets['changePercent24Hr'])]),
         ]
     )
@@ -223,7 +227,9 @@ def create_table(currencies):
         {"id": "Logo", "name": "Logo", "presentation": "markdown"},
         {"id": "Crypto Name", "name": "Crypto Name"},
         {"id": "Symbol", "name": "Symbol"},
-        {"id": "Price", "name": "Price"},
+        {"id": f"Price[{base_currency}]", "name": f"Price[{base_currency}]"},
+        {"id": "Supply", "name": "Supply"},
+        {"id": f"MarketCap[{base_currency}]", "name": f"MarketCap[{base_currency}]"},
         {"id": "Change24h[%]", "name": "Change24h[%]"},
     ]
 
