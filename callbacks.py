@@ -94,7 +94,8 @@ df_short_fng = pd.DataFrame(fng_table_data)
 
 api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
-rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
+#rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
+rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=day&window=14&series_type=close&expand_underlying=false&order=desc&limit=365&apiKey={api_key_polygon}'
 response = requests.request("GET", rsi_url)
 json_data = json.loads(response.text.encode('utf8'))
 data = json_data["results"]["values"]
@@ -139,29 +140,6 @@ def create_table_header(base_currency):
 )
 def create_table(currencies):
 
-    # df = pd.read_csv('saved_data/crypto-usd.csv')
-    # limit_to_five = df[-5:]
-
-    # columns = [{'name': 'Crypto', 'id': 'currency'}]
-    # date_columns = [
-    #     {'name': 1, 'id': 2}
-    #     for data in limit_to_five['date']]
-    # columns.extend(date_columns)
-
-    # rows = []
-    # for currency in currencies:
-    #     single_row = {
-    #         'currency': currency
-    #     }
-    #     for rate, date in zip(limit_to_five['currency'], date_columns):
-    #         date_column = date['id']
-    #         try:
-    #             single_row[date_column] = 1 / rate[currency]
-    #         except KeyError:
-    #             single_row[date_column] = 1
-    #     rows.append(single_row)
-
-
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
     base_currency = "USD"
@@ -187,23 +165,6 @@ def create_table(currencies):
 
     for logo_name in crypto_url_logo_names:
         markdown_urls.append(f"[![Coin](https://cryptologos.cc/logos/{logo_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)")
-
-    # print(markdown_urls)
-
-
-    print(df_assets)
-
-    # df_assets["priceUsd"] = df_assets['priceUsd'].astype(str).astype(float)
-    # df_assets["changePercent24Hr"] = df_assets['changePercent24Hr'].astype(str).astype(float)  
-
-    # df_assets["priceUsd"] = np.around(df_assets["priceUsd"], 4)
-    # df_assets["changePercent24Hr"] = np.around(df_assets["changePercent24Hr"], 2)
-    
-
-
-
-    
-    # crypto_logo = f"[![{symbol}](https://cryptologos.cc/logos/{crypto_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)"
 
     df = pd.DataFrame(
     dict(
@@ -232,19 +193,6 @@ def create_table(currencies):
         {"id": f"MarketCap[{base_currency}]", "name": f"MarketCap[{base_currency}]"},
         {"id": "Change24h[%]", "name": "Change24h[%]"},
     ]
-
-
-
-    # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
-
-    # print(df)
-
-    # data = df.to_dict('records')
-    # columns = [{"name": i, "id": i} for i in df.columns]
-
-
-    # print(data)
-    # print(columns)
 
     return columns, data
 
@@ -303,7 +251,7 @@ def display_rsi_series(time_range):
         df_cut = df_rsi
 
     fig = px.scatter(df_cut, x="timestamp", y="value", color="value", 
-                color_continuous_scale=["red", "yellow", "green"], title = "Example of RSI for AAPL indicator")
+                color_continuous_scale=["red", "yellow", "green"], title = "RSI Index for X:BTC-USD indicator")
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_traces(mode='markers+lines')
