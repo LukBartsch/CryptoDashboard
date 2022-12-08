@@ -73,7 +73,7 @@ layout = html.Div(className="main", children=[
         className="tab-box"
         ),
 
-        dcc.Tab(label='Tab three', children=[
+        dcc.Tab(label='Moving Averages', children=[
             ma_select_config,
             ma_graph
         ],

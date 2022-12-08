@@ -24,6 +24,7 @@ unix_end_time = time.mktime(end_time.timetuple())*1000
 
 api_key_taapi = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVlIjoiNjM4MzdjYzRmYzVhOGFkZmVjOThmYzkwIiwiaWF0IjoxNjY5NTYxNTYzLCJleHAiOjMzMTc0MDI1NTYzfQ.bTCaTJl_t4geJvNSeC8Cc9kTnfNflXND06p_PE8aFyY'
 
+api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
 
 
@@ -216,8 +217,6 @@ def display_fng_series(time_range):
 
 ###### Preapre data for RSI indicator #######
 
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
-
 #rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
 rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=day&window=14&series_type=close&expand_underlying=false&order=desc&limit=365&apiKey={api_key_polygon}'
 response = requests.request("GET", rsi_url)
@@ -265,10 +264,39 @@ def rsi_toggle_collapse(n, is_open):
 
 
 
-# @app.callback(
-#     Output('rsi-line-graph', 'figure'),
-#     [Input('base-currency', 'value'),
-#      Input('start-date-picker', 'date'),
-#      Input('end-date-picker', 'date')]
-# )
-# def get_data(base_currency, start_date, end_date):
+@app.callback(
+    Output('ma-line-graph', 'figure'),
+    [Input('ma-types', 'types'),
+     Input('ma-window', 'window'),
+     Input('ma-period', 'period')]
+)
+def display_ma_series(types, window, period):
+
+    sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=day&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
+    ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=day&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
+    response = requests.request("GET", sma_url)
+    json_data = json.loads(response.text.encode('utf8'))
+    data = json_data["results"]["values"]
+    df_sma = pd.DataFrame(data)
+    
+
+
+    response = requests.request("GET", ema_url)
+    json_data = json.loads(response.text.encode('utf8'))
+    data = json_data["results"]["values"]
+    df_ema = pd.DataFrame(data)
+
+    df=df_sma.merge(df_ema, on='timestamp', how='left')
+
+    df['timestamp'] = df['timestamp'].astype('datetime64[ms]')
+    # df['timestamp'] = df['timestamp'].apply(lambda x: datetime.datetime.fromtimestamp(x/1000.0))
+
+    print(df)
+
+
+    fig = px.line(df, x = 'timestamp', y=['value_x', 'value_y'])
+    fig.layout.plot_bgcolor = COLORS['background']
+    fig.layout.paper_bgcolor = COLORS['background']
+    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.update_yaxes(showgrid=False, zeroline=False)
+    return fig

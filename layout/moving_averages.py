@@ -17,8 +17,9 @@ ma_select_config = (
                 'Select type: ',
             ),
             dcc.Checklist(
-                options=['ABC', 'BCD', 'AAA'],
-                value=['ABC'],
+                id='ma-types',
+                options=['SMA', 'EMA', 'MACD'],
+                value=['SMA'],
                 # inline=True,
                 style={
                     'padding': '5px',
@@ -34,7 +35,7 @@ ma_select_config = (
             ),
             dcc.Dropdown(
                 id='ma-window',
-                options=['50', '200', '300'],
+                options=['9', '20', '50', '100', '200'],
                 value='50'
             ),
         ],
@@ -46,7 +47,7 @@ ma_select_config = (
                 'Select time range: ',
             ),
             dcc.Dropdown(
-                id='ma-checklist',
+                id='ma-period',
                 options= ['Last Week', 'Last Month', 'Last Six Month', 'Last Year'],
                 value = "Last Month",
             ),
@@ -63,7 +64,7 @@ ma_select_config = (
 ma_graph = (
     html.Section(
         dcc.Graph(
-            id='ma-graph',
+            id='ma-line-graph',
         ),
         className='graph-container'
     )
