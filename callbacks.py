@@ -272,8 +272,8 @@ def rsi_toggle_collapse(n, is_open):
 )
 def display_ma_series(types, window, period):
 
-    sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=day&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
-    ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=day&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
+    sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
+    ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
     response = requests.request("GET", sma_url)
     json_data = json.loads(response.text.encode('utf8'))
     data = json_data["results"]["values"]
