@@ -5,6 +5,7 @@ from layout.crypto_graph_section import main_crypto_title, crypto_and_date_secti
 from layout.fear_and_greed_index import fng_index_table, fng_index_line_graph, fng_index_info
 from layout.rsi_indicator import rsi_index_line_graph, rsi_index_info
 from layout.current_prices_table import current_prices_table
+from layout.moving_averages import ma_select_config
 
 
 
@@ -73,10 +74,7 @@ layout = html.Div(className="main", children=[
         ),
 
         dcc.Tab(label='Tab three', children=[
-            html.H1(
-                children="Third tab will be soon...",
-                className="main-header"
-            ),
+            ma_select_config
         ],
         style={
                 'backgroundColor': 'rgb(50, 50, 50)',

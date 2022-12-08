@@ -26,6 +26,7 @@ api_key_taapi = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVlIjoiNjM4MzdjYzRmYz
 
 
 
+
 ##### Prepare data for main line charts with crypto #####################################
 
 currency = 'bitcoin'
@@ -59,55 +60,6 @@ for currency in CRYPTO_CURRENCIES:
 df.to_csv('saved_data/crypto-usd.csv', index=False)
 
 
-
-
-
-
-##### Prepare data for fear and greed index #####################################
-
-from collections import OrderedDict
-
-fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
-response = requests.request("GET", fng_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["data"]
-df_fng = pd.DataFrame(data)
-
-df_fng_temp = df_fng.loc[[0,1,6,29,364]]
-
-labels_list = [label for label in df_fng_temp['value_classification']]
-values_list = [value for value in df_fng_temp['value']]
-
-fng_table_data = OrderedDict(
-    [
-        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
-        ("Label", labels_list),
-        ("Value", values_list),
-    ]
-)
-df_short_fng = pd.DataFrame(fng_table_data)
-
-
-
-
-###### Preapre data for RSI indicator #######
-
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
-
-#rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
-rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=day&window=14&series_type=close&expand_underlying=false&order=desc&limit=365&apiKey={api_key_polygon}'
-response = requests.request("GET", rsi_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["results"]["values"]
-df_rsi = pd.DataFrame(data)
-
-df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
-
-
-
-
-
-
 @app.callback(
     Output("crypto-graph", "figure"), 
     Input("crypto-dropdown", "value"))
@@ -123,14 +75,15 @@ def display_time_series(crypto_dropdown):
 
 
 
+
+
+
 @app.callback(
     Output('table-header', 'children'),
     [Input('base-currency', 'value')]
 )
 def create_table_header(base_currency):
     return f'Ranking of the ten most popular cryptocurrencies'
-
-
 
 
 @app.callback(
@@ -199,6 +152,31 @@ def create_table(currencies):
 
 
 
+##### Prepare data for fear and greed index #####################################
+
+from collections import OrderedDict
+
+fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
+response = requests.request("GET", fng_url)
+json_data = json.loads(response.text.encode('utf8'))
+data = json_data["data"]
+df_fng = pd.DataFrame(data)
+
+df_fng_temp = df_fng.loc[[0,1,6,29,364]]
+
+labels_list = [label for label in df_fng_temp['value_classification']]
+values_list = [value for value in df_fng_temp['value']]
+
+fng_table_data = OrderedDict(
+    [
+        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
+        ("Label", labels_list),
+        ("Value", values_list),
+    ]
+)
+df_short_fng = pd.DataFrame(fng_table_data)
+
+
 @app.callback(
     Output("fng-collapse", "is_open"),
     [Input("fng-collapse-button", "n_clicks")],
@@ -234,6 +212,20 @@ def display_new_series(time_range):
 
 
 
+
+
+###### Preapre data for RSI indicator #######
+
+api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
+
+#rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
+rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=day&window=14&series_type=close&expand_underlying=false&order=desc&limit=365&apiKey={api_key_polygon}'
+response = requests.request("GET", rsi_url)
+json_data = json.loads(response.text.encode('utf8'))
+data = json_data["results"]["values"]
+df_rsi = pd.DataFrame(data)
+
+df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
 
 
 @app.callback(
