@@ -19,7 +19,7 @@ ma_select_config = (
             dcc.Checklist(
                 options=['ABC', 'BCD', 'AAA'],
                 value=['ABC'],
-                inline=True,
+                # inline=True,
                 style={
                     'padding': '5px',
                 }
@@ -56,5 +56,15 @@ ma_select_config = (
 
     ],
         className='main-options'
+    )
+)
+
+
+ma_graph = (
+    html.Section(
+        dcc.Graph(
+            id='ma-graph',
+        ),
+        className='graph-container'
     )
 )

@@ -153,11 +153,11 @@ body {
     margin-top: 50px;
 }
 
-.container #currency-table{
+.container #crypto-table{
     padding-bottom: 40px;
 }
 
-.container #currency-table table{
+.container #crypto-table table{
     margin: 20px auto;
     max-width: 500px;
 }
@@ -172,7 +172,7 @@ img[src*="#thumbnail"] {
  }
 
 @media (max-width: 900px){
-    .container #currency-table{
+    .container #crypto-table{
         overflow-x: scroll;
     }
 }

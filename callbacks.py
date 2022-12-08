@@ -63,7 +63,7 @@ df.to_csv('saved_data/crypto-usd.csv', index=False)
 @app.callback(
     Output("crypto-graph", "figure"), 
     Input("crypto-dropdown", "value"))
-def display_time_series(crypto_dropdown):
+def display_main_crypto_series(crypto_dropdown):
     df = pd.read_csv('saved_data/crypto-usd.csv')
     fig = px.line(df, x = 'date', y=crypto_dropdown)
     fig.layout.plot_bgcolor = COLORS['background']
@@ -87,11 +87,11 @@ def create_table_header(base_currency):
 
 
 @app.callback(
-    [Output('currency-table', 'columns'),
-     Output('currency-table', 'data')],
+    [Output('crypto-table', 'columns'),
+     Output('crypto-table', 'data')],
     [Input('crypto-dropdown', 'value')]
 )
-def create_table(currencies):
+def create_ranking_table(value):
 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
@@ -192,7 +192,7 @@ def fng_toggle_collapse(n, is_open):
 @app.callback(
     Output("fng-line-graph", "figure"), 
     Input("fng-checklist", "value"))
-def display_new_series(time_range):
+def display_fng_series(time_range):
 
     if time_range=="Last Week":
         df_cut = df_fng[:6]
@@ -261,3 +261,14 @@ def rsi_toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
+
+
+
+
+# @app.callback(
+#     Output('rsi-line-graph', 'figure'),
+#     [Input('base-currency', 'value'),
+#      Input('start-date-picker', 'date'),
+#      Input('end-date-picker', 'date')]
+# )
+# def get_data(base_currency, start_date, end_date):

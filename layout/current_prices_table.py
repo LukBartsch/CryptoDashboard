@@ -9,7 +9,7 @@ current_prices_table = (
             id="table-header",
         ),
         dash_table.DataTable(
-            id='currency-table',
+            id='crypto-table',
             merge_duplicate_headers=True,
             style_header={
                 'backgroundColor': 'rgb(30, 30, 30)',
