@@ -1,6 +1,21 @@
-from dash import html, dash_table
+from dash import html, dash_table, dcc
+import dash_daq as daq
 
 from common import COLORS
+
+
+crypto_amount = (
+    html.Div([
+    daq.LEDDisplay(
+        id='my-crypto-LED-display-1',
+        label="Amount of crypto",
+        value=10,
+        backgroundColor='#111111'
+    )
+],
+    className="LED-display-container"
+)
+)
 
 current_prices_table = (
     
@@ -48,6 +63,6 @@ current_prices_table = (
             ]
         ),
     ],
-        className="container"
+        className="main-options"
     )
  )
