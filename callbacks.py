@@ -314,3 +314,14 @@ def display_ma_series(types, window, period):
     fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(showgrid=False, zeroline=False)
     return fig
+
+
+@app.callback(
+    Output("ma-collapse", "is_open"),
+    [Input("ma-collapse-button", "n_clicks")],
+    [State("ma-collapse", "is_open")],
+)
+def ma_toggle_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
