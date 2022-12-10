@@ -9,6 +9,7 @@ import time
 import requests
 import json
 
+from common import BASE_CURRENCIES
 from common import CRYPTO_CURRENCIES
 from common import COLORS
 
@@ -96,7 +97,7 @@ def create_ranking_table(value):
 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
-    base_currency = "USD"
+    base_currency = BASE_CURRENCIES['USD']
 
     response = requests.request("GET", coincapapi_url)
     json_data = json.loads(response.text.encode('utf8'))

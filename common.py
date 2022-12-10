@@ -1,6 +1,6 @@
 from datetime import datetime
 
-BASE_CURRENCIES = ['USD', 'EUR', 'PLN']
+BASE_CURRENCIES = {'USD': '$', 'EUR': '€', 'PLN': 'zł'}
 
 CRYPTO_CURRENCIES = ['bitcoin', 'ethereum', 'tether', 'solana']
 
