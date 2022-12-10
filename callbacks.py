@@ -218,7 +218,7 @@ def display_fng_series(time_range):
 ###### Preapre data for RSI indicator #######
 
 #rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
-rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=hour&window=14&series_type=close&expand_underlying=false&order=desc&limit=5000&apiKey={api_key_polygon}'
+rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=hour&window=14&series_type=close&expand_underlying=false&order=desc&limit=700&apiKey={api_key_polygon}'
 response = requests.request("GET", rsi_url)
 json_data = json.loads(response.text.encode('utf8'))
 data = json_data["results"]["values"]
@@ -232,12 +232,12 @@ df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
     Input("rsi-checklist", "value"))
 def display_rsi_series(time_range):
 
-    if time_range=="Last Week":
-        df_cut = df_rsi[:6]
-    elif time_range=="Last Month":
-        df_cut = df_rsi[:29]
-    elif time_range=="Last Six Month":
-        df_cut = df_rsi[:179]
+    if time_range=="Last Day":
+        df_cut = df_rsi[:25]
+    elif time_range=="Last Week":
+        df_cut = df_rsi[:169]
+    elif time_range=="Last Two Weeks":
+        df_cut = df_rsi[:337]
     else:
         df_cut = df_rsi
 

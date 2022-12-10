@@ -37,8 +37,8 @@ rsi_index_line_graph = (
                 ),
                 dcc.Dropdown(
                     id='rsi-checklist',
-                    options= ['Last Week', 'Last Month', 'Last Six Month', 'Last Year'],
-                    value = "Last Year",
+                    options= ['Last Day', 'Last Week', 'Last Two Weeks', 'Last Month'],
+                    value = "Last Two Weeks",
                 )
             ],
                 className='select-data higher-width'
