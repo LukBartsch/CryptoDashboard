@@ -18,7 +18,7 @@ ma_select_config = (
             ),
             dcc.Checklist(
                 id='ma-types',
-                options=['SMA', 'EMA', 'MACD'],
+                options=['SMA', 'EMA'],
                 value=['SMA'],
                 # inline=True,
                 style={

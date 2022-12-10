@@ -218,7 +218,7 @@ def display_fng_series(time_range):
 ###### Preapre data for RSI indicator #######
 
 #rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
-rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=day&window=14&series_type=close&expand_underlying=false&order=desc&limit=365&apiKey={api_key_polygon}'
+rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=hour&window=14&series_type=close&expand_underlying=false&order=desc&limit=5000&apiKey={api_key_polygon}'
 response = requests.request("GET", rsi_url)
 json_data = json.loads(response.text.encode('utf8'))
 data = json_data["results"]["values"]
@@ -272,14 +272,13 @@ def rsi_toggle_collapse(n, is_open):
 )
 def display_ma_series(types, window, period):
 
-    sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
-    ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=5000&apiKey={api_key_polygon}'
+    sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
+    ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
+    
     response = requests.request("GET", sma_url)
     json_data = json.loads(response.text.encode('utf8'))
     data = json_data["results"]["values"]
     df_sma = pd.DataFrame(data)
-    
-
 
     response = requests.request("GET", ema_url)
     json_data = json.loads(response.text.encode('utf8'))
@@ -288,13 +287,28 @@ def display_ma_series(types, window, period):
 
     df=df_sma.merge(df_ema, on='timestamp', how='left')
 
+    start_time=float(df["timestamp"].min())
+    end_time=float(df["timestamp"].max())
+
+    url_price_btc = f"http://api.coincap.io/v2/assets/bitcoin/history?interval=h1&start={start_time}&end={end_time}"
+
+    response = requests.request("GET", url_price_btc)
+    json_data = json.loads(response.text.encode('utf8'))
+    data = json_data["data"]
+
+    df_btc_price = pd.DataFrame(data)
+
+    df_btc_price = df_btc_price.rename(columns={"time":"timestamp"})
+    df_btc_price['priceUsd'] = df_btc_price['priceUsd'].astype(float)
+
+    df=df.merge(df_btc_price, on='timestamp', how='left')
+
     df['timestamp'] = df['timestamp'].astype('datetime64[ms]')
     # df['timestamp'] = df['timestamp'].apply(lambda x: datetime.datetime.fromtimestamp(x/1000.0))
 
-    print(df)
+    df = df.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
 
-
-    fig = px.line(df, x = 'timestamp', y=['value_x', 'value_y'])
+    fig = px.line(df, x = 'timestamp', y=['SMA', 'EMA', 'BTC price'], title = "Moving Averages Index for X:BTC-USD indicator")
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
