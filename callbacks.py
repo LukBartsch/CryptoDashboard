@@ -64,10 +64,23 @@ for currency in CRYPTO_CURRENCIES:
 
 @app.callback(
     Output("crypto-graph", "figure"), 
-    Input("crypto-dropdown", "value"))
-def display_main_crypto_series(crypto_dropdown):
+    [Input("crypto-dropdown", "value"),
+    Input('base-currency', 'value')])
+def display_main_crypto_series(crypto_dropdown, base_currency):
+
+    from forex_python.converter import CurrencyRates
+
+    currency_rates = CurrencyRates()
+
+    usd_rate = currency_rates.get_rate('USD', base_currency)
+
+    df=df_main_graph.copy(deep=True)
+
+    for currency in CRYPTO_CURRENCIES:
+        df[currency]=df[currency].multiply(usd_rate)
+
     # df = pd.read_csv('saved_data/crypto-usd.csv')
-    fig = px.line(df_main_graph, x = 'date', y=crypto_dropdown)
+    fig = px.line(df, x = 'date', y=crypto_dropdown)
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
@@ -112,13 +125,19 @@ def create_table_header(base_currency):
 @app.callback(
     [Output('crypto-table', 'columns'),
      Output('crypto-table', 'data')],
-    [Input('crypto-dropdown', 'value')]
+    [Input('base-currency', 'value')]
 )
-def create_ranking_table(value):
+def create_ranking_table(base_currency):
 
+
+    from forex_python.converter import CurrencyRates
+    currency_rates = CurrencyRates()
+    usd_rate = currency_rates.get_rate('USD', base_currency)
+
+ 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
-    base_currency = BASE_CURRENCIES['USD']
+    base_currency = BASE_CURRENCIES[base_currency]
 
     response = requests.request("GET", coincapapi_url)
     json_data = json.loads(response.text.encode('utf8'))
@@ -148,9 +167,9 @@ def create_ranking_table(value):
             ("Logo", [url for url in markdown_urls]),
             ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
             ("Symbol", [symbol for symbol in crypto_symbols]),
-            (f"Price[{base_currency}]", [round(float(price),4) for price in list(df_assets['priceUsd'])]),
+            (f"Price[{base_currency}]", [round((float(price)*usd_rate),4) for price in list(df_assets['priceUsd'])]),
             ("Supply", [round(float(supply),2) for supply in list(df_assets['supply'])]),
-            (f"MarketCap[{base_currency}]", [round(float(market_cap),2) for market_cap in list(df_assets['marketCapUsd'])]),
+            (f"MarketCap[{base_currency}]", [round((float(market_cap)*usd_rate),2) for market_cap in list(df_assets['marketCapUsd'])]),
             ("Change24h[%]", [round(float(change),2) for change in list(df_assets['changePercent24Hr'])]),
         ]
     )
