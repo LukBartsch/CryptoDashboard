@@ -25,28 +25,33 @@ rsi_index_info = (
 )
 
 
-rsi_index_line_graph = (
+rsi_select_period = (
 
     html.Section(children=[
-        html.Div([
-        
-
-            html.Div(children=[
-                html.Label(
-                    ' ',
-                ),
-                dcc.Dropdown(
-                    id='rsi-checklist',
-                    options= ['Last Day', 'Last Week', 'Last Two Weeks', 'Last Month'],
-                    value = "Last Two Weeks",
-                )
-            ],
-                className='select-data higher-width'
+        html.Div(children=[
+            html.Label(
+                'Select time range:',
             ),
-
-            dcc.Graph(id="rsi-line-graph")
-            ])
+            dcc.Dropdown(
+                id='rsi-checklist',
+                options= ['Last Day', 'Last Week', 'Last Two Weeks', 'Last Month'],
+                value = "Last Two Weeks",
+            )
         ],
+            className='select-data higher-width'
+        ),
+    ],
+        className='main-options'
+    )
+)
+
+
+rsi_index_line_graph = (
+
+    html.Section(
+        dcc.Graph(
+            id="rsi-line-graph"
+        ),
         className='graph-container'
     )
 )

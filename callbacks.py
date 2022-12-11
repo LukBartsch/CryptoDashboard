@@ -284,7 +284,7 @@ def rsi_toggle_collapse(n, is_open):
     return is_open
 
 
-###### Preapre data for MA indicator #######
+###### Preapre data for MA-50 indicator #######
 
 sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
 ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
@@ -299,10 +299,10 @@ json_data = json.loads(response.text.encode('utf8'))
 data = json_data["results"]["values"]
 df_ema = pd.DataFrame(data)
 
-df=df_sma.merge(df_ema, on='timestamp', how='left')
+df_ma50=df_sma.merge(df_ema, on='timestamp', how='left')
 
-start_time=float(df["timestamp"].min())
-end_time=float(df["timestamp"].max())
+start_time=float(df_ma50["timestamp"].min())
+end_time=float(df_ma50["timestamp"].max())
 
 url_price_btc = f"http://api.coincap.io/v2/assets/bitcoin/history?interval=h1&start={start_time}&end={end_time}"
 
@@ -315,12 +315,38 @@ df_btc_price = pd.DataFrame(data)
 df_btc_price = df_btc_price.rename(columns={"time":"timestamp"})
 df_btc_price['priceUsd'] = df_btc_price['priceUsd'].astype(float)
 
-df_ma=df.merge(df_btc_price, on='timestamp', how='left')
+df_ma50=df_ma50.merge(df_btc_price, on='timestamp', how='left')
 
-df_ma['timestamp'] = df['timestamp'].astype('datetime64[ms]')
+df_ma50['timestamp'] = df_ma50['timestamp'].astype('datetime64[ms]')
 # df['timestamp'] = df['timestamp'].apply(lambda x: datetime.datetime.fromtimestamp(x/1000.0))
 
-df_ma = df_ma.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
+df_ma50 = df_ma50.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
+
+
+
+###### Preapre data for MA-200 indicator #######
+
+sma200_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=180&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
+ema200_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=180&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
+
+response = requests.request("GET", sma200_url)
+json_data = json.loads(response.text.encode('utf8'))
+data = json_data["results"]["values"]
+df_sma200 = pd.DataFrame(data)
+
+response = requests.request("GET", ema200_url)
+json_data = json.loads(response.text.encode('utf8'))
+data = json_data["results"]["values"]
+df_ema200 = pd.DataFrame(data)
+
+df_ma200=df_sma200.merge(df_ema200, on='timestamp', how='left')
+
+df_ma200=df_ma200.merge(df_btc_price, on='timestamp', how='left')
+
+df_ma200['timestamp'] = df_ma200['timestamp'].astype('datetime64[ms]')
+
+df_ma200 = df_ma200.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
+
 
 
 @app.callback(
@@ -331,6 +357,21 @@ df_ma = df_ma.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC 
 )
 def display_ma_series(types, window, period):
 
+    if window == "50 days":
+        df_ma=df_ma50
+    else:
+        df_ma=df_ma200
+
+
+    if period=="Last Day":
+        df_ma_cut = df_ma[:25]
+    elif period=="Last Week":
+        df_ma_cut = df_ma[:169]
+    elif period=="Last Two Weeks":
+        df_ma_cut = df_ma[:337]
+    else:
+        df_ma_cut = df_ma
+
     ma_types=[]
     if "  Simple Moving Average (SMA)" in types:
         ma_types.append('SMA')
@@ -338,7 +379,7 @@ def display_ma_series(types, window, period):
         ma_types.append('EMA')
     ma_types.append('BTC price')
 
-    fig = px.line(df_ma, x = 'timestamp', y=ma_types, title = "Moving Averages Index for X:BTC-USD indicator")
+    fig = px.line(df_ma_cut, x = 'timestamp', y=ma_types, title = "Moving Averages Index for X:BTC-USD indicator")
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)

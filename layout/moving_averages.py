@@ -37,7 +37,7 @@ ma_select_config = (
 
         html.Div(children=[
             html.Label(
-                'Select time range: ',
+                'Select time range:',
             ),
             dcc.Dropdown(
                 id='ma-period',

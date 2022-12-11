@@ -49,7 +49,7 @@ body {
 .main-options .select-data #base-currency div,
 .main-options .select-data #crypto-dropdown div,
 .graph-container .select-data #fng-checklist div,
-.graph-container .select-data #rsi-checklist div,
+.main-options .select-data #rsi-checklist div,
 .main-options .select-data #ma-period div,
 .main-options .select-data #ma-window div{
     color: #007eff;
@@ -136,7 +136,7 @@ body {
 
     .main-options .select-data #base-currency,
     .graph-container .select-data #fng-checklist,
-    .graph-container .select-data #rsi-checklist,
+    .main-options .select-data #rsi-checklist,
     .main-options .select-data #ma-period div,
     .main-options .select-data #ma-window div
     {
