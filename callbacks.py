@@ -3,7 +3,6 @@ from dash import Input, Output, State
 import plotly.express as px
 
 import pandas as pd
-import numpy as np
 import datetime
 import time
 import requests
@@ -50,24 +49,25 @@ for currency in CRYPTO_CURRENCIES:
     # df_temp.to_csv('bitcoin-usd.csv', index=False)
 
     if currency == 'bitcoin':
-        df=pd.DataFrame()
+        df_main_graph=pd.DataFrame()
         # df['time']=df_temp['time']
-        df['date']=df_temp['date']
-        df[currency]=df_temp[currency]
+        df_main_graph['date']=df_temp['date']
+        df_main_graph[currency]=df_temp[currency]
     else:
-        df=df.merge(df_temp, on='date', how='left')
+        df_main_graph=df_main_graph.merge(df_temp, on='date', how='left')
         # df['date_'+currency]=df_temp['new_date']
         # df[currency]=df_temp[currency]
+        df_main_graph = df_main_graph.drop(labels=["priceUsd", "time"], axis=1)
 
-df.to_csv('saved_data/crypto-usd.csv', index=False)
+# df_main_graph.to_csv('crypto-usd.csv', index=False)
 
 
 @app.callback(
     Output("crypto-graph", "figure"), 
     Input("crypto-dropdown", "value"))
 def display_main_crypto_series(crypto_dropdown):
-    df = pd.read_csv('saved_data/crypto-usd.csv')
-    fig = px.line(df, x = 'date', y=crypto_dropdown)
+    # df = pd.read_csv('saved_data/crypto-usd.csv')
+    fig = px.line(df_main_graph, x = 'date', y=crypto_dropdown)
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
@@ -125,10 +125,9 @@ def create_ranking_table(value):
     assets = json_data["data"]
     df_assets = pd.DataFrame(assets)
 
-
-
     crypto_symbols = list(df_assets['symbol'])
     crypto_names = list(df_assets['id'])
+
 
     crypto_url_logo_names = []
     for index in range(len(crypto_names)):
