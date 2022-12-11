@@ -77,6 +77,27 @@ def display_main_crypto_series(crypto_dropdown):
 
 
 
+@app.callback(
+    [Output('LED-display-usd', 'value'),
+     Output('LED-display-pln', 'value'),
+     Output('LED-display-eur', 'value'),
+     Output('LED-display-gpb', 'value'),
+     Output('LED-display-chf', 'value')],
+    [Input('base-currency', 'value')]
+)
+def get_exchange_rates(base_currency):
+
+    from forex_python.converter import CurrencyRates
+
+    currency_rates = CurrencyRates()
+
+    usd_price = round(currency_rates.get_rate(base_currency, 'USD'),2)
+    pln_price = round(currency_rates.get_rate(base_currency, 'PLN'),2)
+    eur_price = round(currency_rates.get_rate(base_currency, 'EUR'),2)
+    gbp_price = round(currency_rates.get_rate(base_currency, 'GBP'),2)
+    chf_price = round(currency_rates.get_rate(base_currency, 'CHF'),2)
+
+    return usd_price, pln_price, eur_price, gbp_price, chf_price
 
 
 
@@ -85,7 +106,7 @@ def display_main_crypto_series(crypto_dropdown):
     [Input('base-currency', 'value')]
 )
 def create_table_header(base_currency):
-    return f'Ranking of the ten most popular cryptocurrencies'
+    return f'Ranking of 10 ten most popular cryptocurrencies in {base_currency}:'
 
 
 @app.callback(

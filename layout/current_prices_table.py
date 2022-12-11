@@ -2,20 +2,62 @@ from dash import html, dash_table, dcc
 import dash_daq as daq
 
 from common import COLORS
-
+from common import BASE_CURRENCIES
 
 crypto_amount = (
-    html.Div([
-    daq.LEDDisplay(
-        id='my-crypto-LED-display-1',
-        label="Amount of crypto",
-        value=10,
-        backgroundColor='#111111'
+
+    html.Section(children=[
+        html.Div(children=[
+            daq.LEDDisplay(
+                id='LED-display-usd',
+                label=f"USD [{BASE_CURRENCIES['USD']}]",
+                backgroundColor='#111111'
+            ),
+        ],
+            className='select-data higher-width'
+        ),
+        html.Div(children=[
+            daq.LEDDisplay(
+                id='LED-display-pln',
+                label=f"PLN [{BASE_CURRENCIES['PLN']}]",
+                backgroundColor='#111111'
+            ),
+        ],
+            className='select-data higher-width'
+        ),
+        html.Div(children=[
+            daq.LEDDisplay(
+                id='LED-display-eur',
+                label=f"EUR [{BASE_CURRENCIES['EUR']}]",
+                backgroundColor='#111111'
+            ),
+        ],
+            className='select-data higher-width'
+        ),
+        html.Div(children=[
+            daq.LEDDisplay(
+                id='LED-display-gpb',
+                label=f"GBP [{BASE_CURRENCIES['GBP']}]",
+                backgroundColor='#111111'
+            ),
+        ],
+            className='select-data higher-width'
+        ),
+        html.Div(children=[
+            daq.LEDDisplay(
+                id='LED-display-chf',
+                label=f"CHF [{BASE_CURRENCIES['CHF']}]",
+                backgroundColor='#111111'
+            ),
+        ],
+            className='select-data higher-width'
+        )
+    ],
+        className='main-options'
     )
-],
-    className="LED-display-container"
 )
-)
+
+
 
 current_prices_table = (
     
