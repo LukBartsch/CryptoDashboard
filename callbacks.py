@@ -65,8 +65,11 @@ for currency in CRYPTO_CURRENCIES:
 @app.callback(
     Output("crypto-graph", "figure"), 
     [Input("crypto-dropdown", "value"),
-    Input('base-currency', 'value')])
-def display_main_crypto_series(crypto_dropdown, base_currency):
+     Input('base-currency', 'value'),
+     Input('start-date-picker', 'date'),
+     Input('end-date-picker', 'date')]
+)
+def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_date):
 
     from forex_python.converter import CurrencyRates
 
