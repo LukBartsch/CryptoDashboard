@@ -26,7 +26,7 @@ crypto_and_date_section = (
             ),
             dcc.Dropdown(
                 id='base-currency',
-                options=BASE_CURRENCIES,
+                options=list(BASE_CURRENCIES.keys()),
                 value='USD'
             ),
         ],
