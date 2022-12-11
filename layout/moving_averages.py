@@ -7,12 +7,12 @@ ma_select_config = (
 
         html.Div(children=[
             html.Label(
-                'Select type: ',
+                'Select MA type: ',
             ),
             dcc.Checklist(
                 id='ma-types',
-                options=['Simple Moving Average (SMA)', 'Exponential Moving Average (EMA)'],
-                value=['Simple Moving Average (SMA)'],
+                options=['  Simple Moving Average (SMA)', '  Exponential Moving Average (EMA)'],
+                value=['  Simple Moving Average (SMA)', '  Exponential Moving Average (EMA)'],
                 # inline=True,
                 style={
                     'padding': '5px',
@@ -24,12 +24,12 @@ ma_select_config = (
 
         html.Div(children=[
             html.Label(
-                'Select window: ',
+                'Select window size used to calculate: ',
             ),
             dcc.Dropdown(
                 id='ma-window',
-                options=['9', '20', '50', '100', '200'],
-                value='50'
+                options=['50 days', '200 days'],
+                value='50 days'
             ),
         ],
             className='select-data higher-width'
