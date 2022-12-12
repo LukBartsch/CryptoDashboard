@@ -144,7 +144,17 @@ body {
     }
 
     .tabs-menu {
-        max-width: 70%;
+        max-width: 100%;
+    }
+
+    .tab-box {
+        max-width: 80%;
+        margin: auto;
+    }
+
+    .LED-display-container {
+        max-width: 20%;
+        margin: auto;
     }
 }
 
@@ -160,16 +170,29 @@ body {
     margin-top: 50px;
 }
 
-.container #crypto-table{
+
+.main-table-options{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1100px;
+    margin: auto;
+    /* margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 50px 0px;
+    padding: 20px 0; */
+}
+
+.main-table-options #crypto-table{
     padding-bottom: 40px;
 }
 
-.container #crypto-table table{
+.main-table-options #crypto-table table{
     margin: 20px auto;
     max-width: 500px;
 }
 
-.container #table-header {
+.main-table-options #table-header {
     margin: auto;
     text-align: center;
     justify-content: center;
@@ -181,8 +204,10 @@ img[src*="#thumbnail"] {
  }
 
 @media (max-width: 900px){
-    .container #crypto-table{
+    .main-table-options #crypto-table{
         overflow-x: scroll;
+        max-width: 90%;
+        margin: auto;
     }
 }
 

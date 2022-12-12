@@ -105,6 +105,6 @@ current_prices_table = (
             ]
         ),
     ],
-        className="main-options"
+        className="main-table-options"
     )
  )
