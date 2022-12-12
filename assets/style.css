@@ -177,10 +177,6 @@ body {
     justify-content: center;
     max-width: 1100px;
     margin: auto;
-    /* margin: 0 auto;
-    border-collapse: separate;
-    border-spacing: 50px 0px;
-    padding: 20px 0; */
 }
 
 .main-table-options #crypto-table{

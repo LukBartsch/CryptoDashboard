@@ -22,8 +22,6 @@ unix_start_time = time.mktime(start_time.timetuple())*1000
 unix_end_time = time.mktime(end_time.timetuple())*1000
 
 
-api_key_taapi = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVlIjoiNjM4MzdjYzRmYzVhOGFkZmVjOThmYzkwIiwiaWF0IjoxNjY5NTYxNTYzLCJleHAiOjMzMTc0MDI1NTYzfQ.bTCaTJl_t4geJvNSeC8Cc9kTnfNflXND06p_PE8aFyY'
-
 api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
 
