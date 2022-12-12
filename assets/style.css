@@ -140,13 +140,26 @@ body {
     .main-options .select-data #ma-period div,
     .main-options .select-data #ma-window div
     {
-        min-width: 130px;
+        min-width: 80px;
+    }
+
+    .main-fng-box {
+        flex-direction: column;
+        margin: auto;
+        border-spacing: 0;
+        padding: 0;
+        margin-bottom: 0;
+        padding-bottom: 50px;
     }
 
     .main-fng-box .fng-part-data {
-        max-width: 180px;
-        font-size: 12px;
+        margin: auto;
     }
+
+    .main-fng-box .fng-part-data #fear_greed_index{
+        margin-top: 50px;
+    }
+
 
     .tabs-menu {
         max-width: 100%;
