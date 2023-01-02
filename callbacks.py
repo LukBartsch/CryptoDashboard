@@ -15,7 +15,7 @@ from common import COLORS
 from app import app
 
 
-start_time = datetime.datetime(2015, 1, 1)
+start_time = datetime.datetime(2017, 1, 1)
 end_time = datetime.datetime.now()
 
 unix_start_time = time.mktime(start_time.timetuple())*1000
@@ -30,35 +30,38 @@ api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
 currency = 'bitcoin'
 
-for currency in CRYPTO_CURRENCIES:
+try:
 
-    url = f"http://api.coincap.io/v2/assets/{currency}/history?interval=d1&start={unix_start_time}&end={unix_end_time}"
+    for currency in CRYPTO_CURRENCIES:
 
-    payload = {}
-    headers= {}
+        url = f"http://api.coincap.io/v2/assets/{currency}/history?interval=d1&start={unix_start_time}&end={unix_end_time}"
 
-    response = requests.request("GET", url, headers=headers, data = payload)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["data"]
+        payload = {}
+        headers= {}
 
-    df_temp = pd.DataFrame(data)
-    df_temp[currency] = pd.to_numeric(df_temp['priceUsd'], errors='coerce').fillna(0, downcast='infer')
-    df_temp['date'] = pd.to_datetime(df_temp['date'], dayfirst=False, utc=False, format='%Y-%m-%d')
-    # df_temp.to_csv('bitcoin-usd.csv', index=False)
+        response = requests.request("GET", url, headers=headers, data = payload)
+        json_data = json.loads(response.text.encode('utf8'))
+        data = json_data["data"]
 
-    if currency == 'bitcoin':
-        df_main_graph=pd.DataFrame()
-        # df['time']=df_temp['time']
-        df_main_graph['date']=df_temp['date']
-        df_main_graph[currency]=df_temp[currency]
-    else:
-        df_main_graph=df_main_graph.merge(df_temp, on='date', how='left')
-        # df['date_'+currency]=df_temp['new_date']
-        # df[currency]=df_temp[currency]
-        df_main_graph = df_main_graph.drop(labels=["priceUsd", "time"], axis=1)
+        df_temp = pd.DataFrame(data)
+        df_temp[currency] = pd.to_numeric(df_temp['priceUsd'], errors='coerce').fillna(0, downcast='infer')
+        df_temp['date'] = pd.to_datetime(df_temp['date'], dayfirst=False, utc=False, format='%Y-%m-%d')
+        # df_temp.to_csv('bitcoin-usd.csv', index=False)
 
-# df_main_graph.to_csv('crypto-usd.csv', index=False)
+        if currency == 'bitcoin':
+            df_main_graph=pd.DataFrame()
+            # df['time']=df_temp['time']
+            df_main_graph['date']=df_temp['date']
+            df_main_graph[currency]=df_temp[currency]
+        else:
+            df_main_graph=df_main_graph.merge(df_temp, on='date', how='left')
+            # df['date_'+currency]=df_temp['new_date']
+            # df[currency]=df_temp[currency]
+            df_main_graph = df_main_graph.drop(labels=["priceUsd", "time"], axis=1)
 
+    # df_main_graph.to_csv('crypto-usd.csv', index=False)
+except:
+    df_main_graph=pd.DataFrame()
 
 @app.callback(
     Output("crypto-graph", "figure"), 
@@ -156,25 +159,44 @@ def create_ranking_table(base_currency):
     # print(crypto_symbols)
     # print(crypto_url_logo_names)
 
+
+    # print(df_assets)
+
     markdown_urls = []
 
     for logo_name in crypto_url_logo_names:
         markdown_urls.append(f"[![Coin](https://cryptologos.cc/logos/{logo_name}-logo.svg?v=023#thumbnail)](https://cryptologos.cc/)")
 
-    df = pd.DataFrame(
-    dict(
-        [
-            ("Pos", [pos+1 for pos in range(len(crypto_names))]),
-            ("Logo", [url for url in markdown_urls]),
-            ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
-            ("Symbol", [symbol for symbol in crypto_symbols]),
-            (f"Price[{base_currency}]", [round((float(price)*usd_rate),4) for price in list(df_assets['priceUsd'])]),
-            ("Supply", [round(float(supply),2) for supply in list(df_assets['supply'])]),
-            (f"MarketCap[{base_currency}]", [round((float(market_cap)*usd_rate),2) for market_cap in list(df_assets['marketCapUsd'])]),
-            ("Change24h[%]", [round(float(change),2) for change in list(df_assets['changePercent24Hr'])]),
-        ]
-    )
-    )
+    try:
+        df = pd.DataFrame(  
+        dict(
+            [
+                ("Pos", [pos+1 for pos in range(len(crypto_names))]),
+                ("Logo", [url for url in markdown_urls]),
+                ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
+                ("Symbol", [symbol for symbol in crypto_symbols]),
+                (f"Price[{base_currency}]", [round((float(price)*usd_rate),4) for price in list(df_assets['priceUsd'])]),
+                ("Supply", [round(float(supply),2) for supply in list(df_assets['supply'])]),
+                (f"MarketCap[{base_currency}]", [round((float(market_cap)*usd_rate),2) for market_cap in list(df_assets['marketCapUsd'])]),
+                ("Change24h[%]", [round(float(change),2) for change in list(df_assets['changePercent24Hr'])]),
+            ]
+        )
+        )
+    except:
+        df = pd.DataFrame(  
+        dict(
+            [
+                ("Pos", [pos+1 for pos in range(len(crypto_names))]),
+                ("Logo", [url for url in markdown_urls]),
+                ("Crypto Name", [crypto_name for crypto_name in list(df_assets['name'])]),
+                ("Symbol", [symbol for symbol in crypto_symbols]),
+                (f"Price[{base_currency}]", [round((float(price)*usd_rate),4) for price in list(df_assets['priceUsd'])]),
+                ("Supply", [round(float(supply),2) for supply in list(df_assets['supply'])]),
+                (f"MarketCap[{base_currency}]", [round((float(market_cap)*usd_rate),2) for market_cap in list(df_assets['marketCapUsd'])]),
+                ("Change24h[%]", [change for change in list(df_assets['changePercent24Hr'])]),
+            ]
+        )
+        )
 
 
     data=df.to_dict("records")
@@ -196,27 +218,30 @@ def create_ranking_table(base_currency):
 
 ##### Prepare data for fear and greed index #####################################
 
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
 
-fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
-response = requests.request("GET", fng_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["data"]
-df_fng = pd.DataFrame(data)
+    fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
+    response = requests.request("GET", fng_url)
+    json_data = json.loads(response.text.encode('utf8'))
+    data = json_data["data"]
+    df_fng = pd.DataFrame(data)
 
-df_fng_temp = df_fng.loc[[0,1,6,29,364]]
+    df_fng_temp = df_fng.loc[[0,1,6,29,364]]
 
-labels_list = [label for label in df_fng_temp['value_classification']]
-values_list = [value for value in df_fng_temp['value']]
+    labels_list = [label for label in df_fng_temp['value_classification']]
+    values_list = [value for value in df_fng_temp['value']]
 
-fng_table_data = OrderedDict(
-    [
-        ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
-        ("Label", labels_list),
-        ("Value", values_list),
-    ]
-)
-df_short_fng = pd.DataFrame(fng_table_data)
+    fng_table_data = OrderedDict(
+        [
+            ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
+            ("Label", labels_list),
+            ("Value", values_list),
+        ]
+    )
+    df_short_fng = pd.DataFrame(fng_table_data)
+except:
+    df_short_fng = pd.DataFrame()
 
 
 @app.callback(
@@ -325,11 +350,14 @@ end_time=float(df_ma50["timestamp"].max())
 
 url_price_btc = f"http://api.coincap.io/v2/assets/bitcoin/history?interval=h1&start={start_time}&end={end_time}"
 
-response = requests.request("GET", url_price_btc)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["data"]
+try:
+    response = requests.request("GET", url_price_btc)
+    json_data = json.loads(response.text.encode('utf8'))
+    data = json_data["data"]
 
-df_btc_price = pd.DataFrame(data)
+    df_btc_price = pd.DataFrame(data)
+except:
+    df_btc_price = pd.DataFrame()
 
 df_btc_price = df_btc_price.rename(columns={"time":"timestamp"})
 df_btc_price['priceUsd'] = df_btc_price['priceUsd'].astype(float)
