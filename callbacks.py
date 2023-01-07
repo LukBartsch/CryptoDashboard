@@ -20,9 +20,6 @@ from data_manage import preapre_data_for_crypto_main_line_graph, prepare_data_fo
 CRYPTO_CURRENCIES = prepare_crypto_list()
 
 
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
-
-
 ##### Main crypto graph section #####
 
 start_time = datetime.datetime(2017, 1, 1)
