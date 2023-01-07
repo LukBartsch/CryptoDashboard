@@ -3,9 +3,8 @@ from dash import html, dcc
 from datetime import datetime, timedelta
 
 from common import BASE_CURRENCIES
-from common import CRYPTO_CURRENCIES
 from common import TODAY_DATE
-
+from callbacks import CRYPTO_CURRENCIES
 
 
 main_crypto_title = (

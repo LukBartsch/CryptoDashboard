@@ -4,12 +4,27 @@ import time
 import requests
 import json
 
-from common import CRYPTO_CURRENCIES
 
 api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
 
-def preapre_data_for_crypto_main_line_graph(start_time, end_time):
+def prepare_crypto_list():
+
+    coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
+
+    try:
+        response = requests.request("GET", coincapapi_url)
+        json_data = json.loads(response.text.encode('utf8'))
+        assets = json_data["data"]
+        df_assets = pd.DataFrame(assets)
+        crypto_names = list(df_assets['id'])
+    except:
+        crypto_names = []
+
+    return crypto_names
+
+
+def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENCIES):
 
     unix_start_time = time.mktime(start_time.timetuple())*1000
     unix_end_time = time.mktime(end_time.timetuple())*1000

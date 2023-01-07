@@ -11,10 +11,14 @@ import requests
 import json
 
 from common import BASE_CURRENCIES
-from common import CRYPTO_CURRENCIES
 from common import COLORS
 
+from data_manage import prepare_crypto_list
 from data_manage import preapre_data_for_crypto_main_line_graph, prepare_data_for_fear_and_greed_index, preapre_data_for_rsi_indicator, preapre_data_for_ma_50_and_200_indicator
+
+
+CRYPTO_CURRENCIES = prepare_crypto_list()
+
 
 api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
@@ -23,7 +27,7 @@ api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
 start_time = datetime.datetime(2017, 1, 1)
 end_time = datetime.datetime.now()
-df_main_graph = preapre_data_for_crypto_main_line_graph(start_time, end_time)
+df_main_graph = preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENCIES)
 
 @app.callback(
     Output("crypto-graph", "figure"), 
