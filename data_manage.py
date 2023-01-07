@@ -5,8 +5,8 @@ import requests
 import json
 
 from common import CRYPTO_CURRENCIES
+from common import api_key_polygon
 
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
 
 
 def preapre_data_for_crypto_main_line_graph(start_time, end_time):
