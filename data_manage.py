@@ -4,8 +4,7 @@ import time
 import requests
 import json
 
-
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
+from common import api_key_polygon
 
 
 def prepare_crypto_list():
