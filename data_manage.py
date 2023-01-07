@@ -8,7 +8,6 @@ from common import CRYPTO_CURRENCIES
 from common import api_key_polygon
 
 
-
 def preapre_data_for_crypto_main_line_graph(start_time, end_time):
 
     unix_start_time = time.mktime(start_time.timetuple())*1000
