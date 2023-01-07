@@ -1,4 +1,6 @@
 
+from app import app
+
 from dash import Input, Output, State
 import plotly.express as px
 
@@ -9,59 +11,20 @@ import requests
 import json
 
 from common import BASE_CURRENCIES
-from common import CRYPTO_CURRENCIES
 from common import COLORS
 
-from app import app
+from data_manage import prepare_crypto_list
+from data_manage import preapre_data_for_crypto_main_line_graph, prepare_data_for_fear_and_greed_index, preapre_data_for_rsi_indicator, preapre_data_for_ma_50_and_200_indicator
 
+
+CRYPTO_CURRENCIES = prepare_crypto_list()
+
+
+##### Main crypto graph section #####
 
 start_time = datetime.datetime(2017, 1, 1)
 end_time = datetime.datetime.now()
-
-unix_start_time = time.mktime(start_time.timetuple())*1000
-unix_end_time = time.mktime(end_time.timetuple())*1000
-
-
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
-
-
-
-##### Prepare data for main line charts with crypto #####################################
-
-currency = 'bitcoin'
-
-try:
-
-    for currency in CRYPTO_CURRENCIES:
-
-        url = f"http://api.coincap.io/v2/assets/{currency}/history?interval=d1&start={unix_start_time}&end={unix_end_time}"
-
-        payload = {}
-        headers= {}
-
-        response = requests.request("GET", url, headers=headers, data = payload)
-        json_data = json.loads(response.text.encode('utf8'))
-        data = json_data["data"]
-
-        df_temp = pd.DataFrame(data)
-        df_temp[currency] = pd.to_numeric(df_temp['priceUsd'], errors='coerce').fillna(0, downcast='infer')
-        df_temp['date'] = pd.to_datetime(df_temp['date'], dayfirst=False, utc=False, format='%Y-%m-%d')
-        # df_temp.to_csv('bitcoin-usd.csv', index=False)
-
-        if currency == 'bitcoin':
-            df_main_graph=pd.DataFrame()
-            # df['time']=df_temp['time']
-            df_main_graph['date']=df_temp['date']
-            df_main_graph[currency]=df_temp[currency]
-        else:
-            df_main_graph=df_main_graph.merge(df_temp, on='date', how='left')
-            # df['date_'+currency]=df_temp['new_date']
-            # df[currency]=df_temp[currency]
-            df_main_graph = df_main_graph.drop(labels=["priceUsd", "time"], axis=1)
-
-    # df_main_graph.to_csv('crypto-usd.csv', index=False)
-except:
-    df_main_graph=pd.DataFrame()
+df_main_graph = preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENCIES)
 
 @app.callback(
     Output("crypto-graph", "figure"), 
@@ -75,9 +38,7 @@ def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_d
     from forex_python.converter import CurrencyRates
 
     currency_rates = CurrencyRates()
-
     usd_rate = currency_rates.get_rate('USD', base_currency)
-
     df=df_main_graph.copy(deep=True)
 
     for currency in CRYPTO_CURRENCIES:
@@ -90,8 +51,6 @@ def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_d
     fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(showgrid=False, zeroline=False)
     return fig
-
-
 
 
 @app.callback(
@@ -107,7 +66,6 @@ def get_exchange_rates(base_currency):
     from forex_python.converter import CurrencyRates
 
     currency_rates = CurrencyRates()
-
     usd_price = round(currency_rates.get_rate(base_currency, 'USD'),2)
     pln_price = round(currency_rates.get_rate(base_currency, 'PLN'),2)
     eur_price = round(currency_rates.get_rate(base_currency, 'EUR'),2)
@@ -133,12 +91,11 @@ def create_table_header(base_currency):
 )
 def create_ranking_table(base_currency):
 
-
     from forex_python.converter import CurrencyRates
+
     currency_rates = CurrencyRates()
     usd_rate = currency_rates.get_rate('USD', base_currency)
 
- 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
     base_currency = BASE_CURRENCIES[base_currency]
@@ -151,16 +108,9 @@ def create_ranking_table(base_currency):
     crypto_symbols = list(df_assets['symbol'])
     crypto_names = list(df_assets['id'])
 
-
     crypto_url_logo_names = []
     for index in range(len(crypto_names)):
         crypto_url_logo_names.append(crypto_names[index]+"-"+crypto_symbols[index].lower())
-
-    # print(crypto_symbols)
-    # print(crypto_url_logo_names)
-
-
-    # print(df_assets)
 
     markdown_urls = []
 
@@ -198,7 +148,6 @@ def create_ranking_table(base_currency):
         )
         )
 
-
     data=df.to_dict("records")
     columns=[
         {"id": "Pos", "name": "Pos"},
@@ -216,33 +165,9 @@ def create_ranking_table(base_currency):
 
 
 
-##### Prepare data for fear and greed index #####################################
+##### Fear and greed index section #####
 
-try:
-    from collections import OrderedDict
-
-    fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
-    response = requests.request("GET", fng_url)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["data"]
-    df_fng = pd.DataFrame(data)
-
-    df_fng_temp = df_fng.loc[[0,1,6,29,364]]
-
-    labels_list = [label for label in df_fng_temp['value_classification']]
-    values_list = [value for value in df_fng_temp['value']]
-
-    fng_table_data = OrderedDict(
-        [
-            ("Time", ["Now", "Yesterday", "Week ago", "Month ago", "Year ago"]),
-            ("Label", labels_list),
-            ("Value", values_list),
-        ]
-    )
-    df_short_fng = pd.DataFrame(fng_table_data)
-except:
-    df_short_fng = pd.DataFrame()
-
+df_fng, df_short_fng = prepare_data_for_fear_and_greed_index()
 
 @app.callback(
     Output("fng-collapse", "is_open"),
@@ -253,7 +178,6 @@ def fng_toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
-
 
 
 @app.callback(
@@ -281,17 +205,9 @@ def display_fng_series(time_range):
 
 
 
-###### Preapre data for RSI indicator #######
+###### RSI indicator section #######
 
-#rsi_url = f'https://api.polygon.io/v1/indicators/rsi/AAPL?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={api_key_polygon}&limit=365'
-rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=hour&window=14&series_type=close&expand_underlying=false&order=desc&limit=700&apiKey={api_key_polygon}'
-response = requests.request("GET", rsi_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["results"]["values"]
-df_rsi = pd.DataFrame(data)
-
-df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
-
+df_rsi = preapre_data_for_rsi_indicator()
 
 @app.callback(
     Output("rsi-line-graph", "figure"), 
@@ -328,73 +244,10 @@ def rsi_toggle_collapse(n, is_open):
     return is_open
 
 
-###### Preapre data for MA-50 indicator #######
 
-sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
-ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
+###### MA-50 and Ma-200 indicator section #######
 
-response = requests.request("GET", sma_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["results"]["values"]
-df_sma = pd.DataFrame(data)
-
-response = requests.request("GET", ema_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["results"]["values"]
-df_ema = pd.DataFrame(data)
-
-df_ma50=df_sma.merge(df_ema, on='timestamp', how='left')
-
-start_time=float(df_ma50["timestamp"].min())
-end_time=float(df_ma50["timestamp"].max())
-
-url_price_btc = f"http://api.coincap.io/v2/assets/bitcoin/history?interval=h1&start={start_time}&end={end_time}"
-
-try:
-    response = requests.request("GET", url_price_btc)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["data"]
-
-    df_btc_price = pd.DataFrame(data)
-except:
-    df_btc_price = pd.DataFrame()
-
-df_btc_price = df_btc_price.rename(columns={"time":"timestamp"})
-df_btc_price['priceUsd'] = df_btc_price['priceUsd'].astype(float)
-
-df_ma50=df_ma50.merge(df_btc_price, on='timestamp', how='left')
-
-df_ma50['timestamp'] = df_ma50['timestamp'].astype('datetime64[ms]')
-# df['timestamp'] = df['timestamp'].apply(lambda x: datetime.datetime.fromtimestamp(x/1000.0))
-
-df_ma50 = df_ma50.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
-
-
-
-###### Preapre data for MA-200 indicator #######
-
-sma200_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=180&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
-ema200_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=180&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
-
-response = requests.request("GET", sma200_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["results"]["values"]
-df_sma200 = pd.DataFrame(data)
-
-response = requests.request("GET", ema200_url)
-json_data = json.loads(response.text.encode('utf8'))
-data = json_data["results"]["values"]
-df_ema200 = pd.DataFrame(data)
-
-df_ma200=df_sma200.merge(df_ema200, on='timestamp', how='left')
-
-df_ma200=df_ma200.merge(df_btc_price, on='timestamp', how='left')
-
-df_ma200['timestamp'] = df_ma200['timestamp'].astype('datetime64[ms]')
-
-df_ma200 = df_ma200.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
-
-
+df_ma50, df_ma200 = preapre_data_for_ma_50_and_200_indicator()
 
 @app.callback(
     Output('ma-line-graph', 'figure'),
