@@ -22,9 +22,9 @@ CRYPTO_CURRENCIES = prepare_crypto_list()
 
 ##### Main crypto graph section #####
 
-start_time = datetime.datetime(2017, 1, 1)
-end_time = datetime.datetime.now()
-df_main_graph = preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENCIES)
+default_start_time = datetime.datetime(2015, 1, 1)
+default_end_time = datetime.datetime.now()
+df_main_graph = preapre_data_for_crypto_main_line_graph(default_start_time, default_end_time, CRYPTO_CURRENCIES)
 
 @app.callback(
     Output("crypto-graph", "figure"), 
@@ -35,14 +35,29 @@ df_main_graph = preapre_data_for_crypto_main_line_graph(start_time, end_time, CR
 )
 def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_date):
 
+
+    from dateutil import parser
+    sent_start_time=parser.isoparse(start_date)
+    sent_end_time=parser.isoparse(end_date)
+
+    
+    start_time_difference = sent_start_time - default_start_time
+    start_time_difference = start_time_difference.days
+
+    end_time_difference = sent_end_time - default_start_time
+    end_time_difference = end_time_difference.days
+
     from forex_python.converter import CurrencyRates
 
     currency_rates = CurrencyRates()
     usd_rate = currency_rates.get_rate('USD', base_currency)
     df=df_main_graph.copy(deep=True)
 
+    df=df[start_time_difference:end_time_difference]
+
     for currency in CRYPTO_CURRENCIES:
         df[currency]=df[currency].multiply(usd_rate)
+
 
     # df = pd.read_csv('saved_data/crypto-usd.csv')
     fig = px.line(df, x = 'date', y=crypto_dropdown)
