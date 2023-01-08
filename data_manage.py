@@ -27,7 +27,7 @@ def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENC
 
     unix_start_time = time.mktime(start_time.timetuple())*1000
     unix_end_time = time.mktime(end_time.timetuple())*1000
-    
+
     try:
         for currency in CRYPTO_CURRENCIES:
 
@@ -61,11 +61,12 @@ def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENC
 
 
 def prepare_data_for_fear_and_greed_index():
+
+    from collections import OrderedDict
+
+    fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
     
     try:
-        from collections import OrderedDict
-
-        fng_url = 'https://api.alternative.me/fng/?limit=365&date_format=us'
         response = requests.request("GET", fng_url)
         json_data = json.loads(response.text.encode('utf8'))
         data = json_data["data"]
@@ -93,12 +94,15 @@ def prepare_data_for_fear_and_greed_index():
 def preapre_data_for_rsi_indicator():
     
     rsi_url = f'https://api.polygon.io/v1/indicators/rsi/X:BTCUSD?timespan=hour&window=14&series_type=close&expand_underlying=false&order=desc&limit=700&apiKey={api_key_polygon}'
-    response = requests.request("GET", rsi_url)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["results"]["values"]
-    df_rsi = pd.DataFrame(data)
-
-    df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
+    
+    try:
+        response = requests.request("GET", rsi_url)
+        json_data = json.loads(response.text.encode('utf8'))
+        data = json_data["results"]["values"]
+        df_rsi = pd.DataFrame(data)
+        df_rsi['timestamp'] = df_rsi['timestamp'].astype('datetime64[ms]')
+    except:
+        df_rsi = pd.DataFrame()
 
     return df_rsi
 
@@ -108,28 +112,32 @@ def preapre_data_for_ma_50_and_200_indicator():
     sma_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
     ema_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=50&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
 
-    response = requests.request("GET", sma_url)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["results"]["values"]
-    df_sma = pd.DataFrame(data)
+    try:
+        response = requests.request("GET", sma_url)
+        json_data = json.loads(response.text.encode('utf8'))
+        data = json_data["results"]["values"]
+        df_sma = pd.DataFrame(data)
 
-    response = requests.request("GET", ema_url)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["results"]["values"]
-    df_ema = pd.DataFrame(data)
+        response = requests.request("GET", ema_url)
+        json_data = json.loads(response.text.encode('utf8'))
+        data = json_data["results"]["values"]
+        df_ema = pd.DataFrame(data)
 
-    df_ma50=df_sma.merge(df_ema, on='timestamp', how='left')
+        df_ma50=df_sma.merge(df_ema, on='timestamp', how='left')
 
-    df_btc_price = prepare_btc_price_for_ma_indicator(df_ma50)
+        df_btc_price = prepare_btc_price_for_ma_indicator(df_ma50)
 
-    df_ma50=df_ma50.merge(df_btc_price, on='timestamp', how='left')
+        df_ma50=df_ma50.merge(df_btc_price, on='timestamp', how='left')
 
-    df_ma50['timestamp'] = df_ma50['timestamp'].astype('datetime64[ms]')
-    # df['timestamp'] = df['timestamp'].apply(lambda x: datetime.datetime.fromtimestamp(x/1000.0))
+        df_ma50['timestamp'] = df_ma50['timestamp'].astype('datetime64[ms]')
+        # df['timestamp'] = df['timestamp'].apply(lambda x: datetime.datetime.fromtimestamp(x/1000.0))
 
-    df_ma50 = df_ma50.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
+        df_ma50 = df_ma50.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
 
-    df_ma200 = preapre_data_for_ma_200_indicator(df_btc_price)
+        df_ma200 = preapre_data_for_ma_200_indicator(df_btc_price)
+    except:
+        df_ma50 = pd.DataFrame()
+        df_ma200 = pd.DataFrame()
 
     return df_ma50, df_ma200
 
@@ -147,11 +155,12 @@ def prepare_btc_price_for_ma_indicator(df_ma50):
         data = json_data["data"]
 
         df_btc_price = pd.DataFrame(data)
+
+        df_btc_price = df_btc_price.rename(columns={"time":"timestamp"})
+        df_btc_price['priceUsd'] = df_btc_price['priceUsd'].astype(float)
+
     except:
         df_btc_price = pd.DataFrame()
-
-    df_btc_price = df_btc_price.rename(columns={"time":"timestamp"})
-    df_btc_price['priceUsd'] = df_btc_price['priceUsd'].astype(float)
 
     return df_btc_price
 
@@ -161,22 +170,27 @@ def preapre_data_for_ma_200_indicator(df_btc_price):
     sma200_url = f'https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=hour&window=180&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
     ema200_url = f'https://api.polygon.io/v1/indicators/ema/X:BTCUSD?timespan=hour&window=180&series_type=close&order=desc&limit=700&apiKey={api_key_polygon}'
 
-    response = requests.request("GET", sma200_url)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["results"]["values"]
-    df_sma200 = pd.DataFrame(data)
+    try:
 
-    response = requests.request("GET", ema200_url)
-    json_data = json.loads(response.text.encode('utf8'))
-    data = json_data["results"]["values"]
-    df_ema200 = pd.DataFrame(data)
+        response = requests.request("GET", sma200_url)
+        json_data = json.loads(response.text.encode('utf8'))
+        data = json_data["results"]["values"]
+        df_sma200 = pd.DataFrame(data)
 
-    df_ma200=df_sma200.merge(df_ema200, on='timestamp', how='left')
+        response = requests.request("GET", ema200_url)
+        json_data = json.loads(response.text.encode('utf8'))
+        data = json_data["results"]["values"]
+        df_ema200 = pd.DataFrame(data)
 
-    df_ma200=df_ma200.merge(df_btc_price, on='timestamp', how='left')
+        df_ma200=df_sma200.merge(df_ema200, on='timestamp', how='left')
 
-    df_ma200['timestamp'] = df_ma200['timestamp'].astype('datetime64[ms]')
+        df_ma200=df_ma200.merge(df_btc_price, on='timestamp', how='left')
 
-    df_ma200 = df_ma200.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
+        df_ma200['timestamp'] = df_ma200['timestamp'].astype('datetime64[ms]')
+
+        df_ma200 = df_ma200.rename(columns={"value_x":"SMA", "value_y":"EMA", "priceUsd":"BTC price"})
+    
+    except:
+        df_ma200 = pd.DataFrame()
 
     return df_ma200
