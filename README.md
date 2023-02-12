@@ -15,7 +15,7 @@ Web application for data visualization. You can see [_here_](https://crypto-dash
 
 
 ## General Information
-An analytical web application that is used to monitor and visualize financial data on the cryptocurrency market. It uses the Dash framework integrated with the Plotly library - all for displaying interactive charts.
+An analytical web application is used to monitor and visualize financial data on the cryptocurrency market. It uses the Dash framework integrated with the Plotly library - all for displaying interactive charts.
 
 Data is collected in real time from several financial services with free API, such as:
 
