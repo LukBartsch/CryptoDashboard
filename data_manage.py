@@ -1,10 +1,11 @@
-
+import os
 import pandas as pd
 import time
 import requests
 import json
 
-from common import api_key_polygon
+
+api_key_polygon = os.environ['api_key_polygon']
 
 
 def prepare_crypto_list():

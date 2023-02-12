@@ -10,5 +10,3 @@ COLORS = {
     'background': '#111111',
     'text': '#7FDBFF'
 }
-
-api_key_polygon = 'IKAQmrb2sLnT0DbQvACRlG2OXg8Cbpa8'
