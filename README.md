@@ -36,7 +36,9 @@ The main view with a graph of historical cryptocurrency prices dynamically chang
 
 ![image](https://user-images.githubusercontent.com/98742733/217930069-8d56adfd-58b8-4da6-9352-4ca8bc934632.png)
 
+The chart shows all selected cryptocurrencies and compares them with the base currency. Below the graph there is a dynamic ranking that shows the ten most popular cryptocurrencies and their current parameters.
 
+![image](https://user-images.githubusercontent.com/98742733/218312289-19e871c0-c1c0-4f13-a24b-933e59fa0f13.png)
 
 Other major financial indicators of the cryptocurrency market presented in the application:
 
@@ -52,6 +54,8 @@ Other major financial indicators of the cryptocurrency market presented in the a
 
 ![image](https://user-images.githubusercontent.com/98742733/218311013-9f99b0c1-f5f0-4579-a898-1c19bc6d43b7.png)
 
+The visitor has the option of choosing the displayed data not only because of the indicator but also for the period of time that interests him. 
+
 ## Setup
 - Clone repository
 * Rename .env.example to `.env` and set your value (get free API key from polygon.io platfrom)
@@ -64,14 +68,18 @@ api_key_polygon = <your_api_key>
 pip install -r requirements.txt
 ```
 * Run command
-```buildoutcfg
+```
 python crypto_dashboard.py
 ```
 ## Project Status
-
+Application deployed in beta version on free cloud hosting that is synchronized with GitHub. However, when starting the application for the first time, wait a few seconds to wake up the server on which the application is installed.
+In the future, the application will be developed in terms of:
+* Optimization of operation
+* Refinement of the graphical interface
+* Preventing to data errors
 
 ## Sources
-
+This app is inspired by currency dash app by [@szymcio32](https://github.com/szymcio32/currency-monitor-dash-app.git)
 
 ## Contact
 Created by [@LukBartsch](https://github.com/LukBartsch) - feel free to contact me!
