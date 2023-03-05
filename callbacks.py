@@ -80,12 +80,19 @@ def get_exchange_rates(base_currency):
 
     from forex_python.converter import CurrencyRates
 
-    currency_rates = CurrencyRates()
-    usd_price = round(currency_rates.get_rate(base_currency, 'USD'),2)
-    pln_price = round(currency_rates.get_rate(base_currency, 'PLN'),2)
-    eur_price = round(currency_rates.get_rate(base_currency, 'EUR'),2)
-    gbp_price = round(currency_rates.get_rate(base_currency, 'GBP'),2)
-    chf_price = round(currency_rates.get_rate(base_currency, 'CHF'),2)
+    try:
+        currency_rates = CurrencyRates()
+        usd_price = round(currency_rates.get_rate(base_currency, 'USD'),2)
+        pln_price = round(currency_rates.get_rate(base_currency, 'PLN'),2)
+        eur_price = round(currency_rates.get_rate(base_currency, 'EUR'),2)
+        gbp_price = round(currency_rates.get_rate(base_currency, 'GBP'),2)
+        chf_price = round(currency_rates.get_rate(base_currency, 'CHF'),2)
+    except:
+        usd_price = 1
+        pln_price = 0.23
+        eur_price = 1.07
+        gbp_price = 1.20
+        chf_price = 1.07
 
     return usd_price, pln_price, eur_price, gbp_price, chf_price
 
