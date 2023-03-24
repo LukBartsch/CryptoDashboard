@@ -73,6 +73,8 @@ def prepare_data_for_fear_and_greed_index():
         data = json_data["data"]
         df_fng = pd.DataFrame(data)
 
+        df_fng['value'] = pd.to_numeric(df_fng['value'], errors='coerce').fillna(0, downcast='infer')
+
         df_fng_temp = df_fng.loc[[0,1,6,29,364]]
 
         labels_list = [label for label in df_fng_temp['value_classification']]
