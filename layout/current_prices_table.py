@@ -1,8 +1,26 @@
-from dash import html, dash_table, dcc
+from dash import html, dash_table
 import dash_daq as daq
+import dash_bootstrap_components as dbc
 
 from common import COLORS
 from common import BASE_CURRENCIES
+
+
+warning_message = (
+
+    html.Section(children=[
+        dbc.Alert(
+            color="warning",
+            id="alert",
+            dismissable=True,
+            is_open=False,
+        ),
+    ],
+        className='main-options'
+    )
+)
+
+
 
 crypto_amount = (
 
