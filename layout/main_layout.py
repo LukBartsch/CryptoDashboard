@@ -23,8 +23,8 @@ layout = html.Div(className="main", children=[
     dcc.Tabs([
         dcc.Tab(label='Ranking', children=[
             
-            warning_message,
             crypto_amount,
+            warning_message,
             current_prices_table
         ],
         style={

@@ -10,11 +10,10 @@ warning_message = (
 
     html.Section(children=[
         dbc.Alert(
-            "Warning! Currency rates are out of date!",
             color="warning",
             id="alert",
             dismissable=True,
-            is_open=True,
+            is_open=False,
         ),
     ],
         className='main-options'
