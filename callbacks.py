@@ -64,7 +64,12 @@ def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_d
 
 
     # df = pd.read_csv('saved_data/crypto-usd.csv')
-    fig = px.line(df, x = 'date', y=crypto_dropdown)
+    fig = px.line(df, x = 'date', y=crypto_dropdown,
+                  labels={
+                     "bitcoin": "Price",
+                     "value": "Price",
+                     "date": "Date"
+                 })
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
