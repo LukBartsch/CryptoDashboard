@@ -14,7 +14,7 @@ from common import BASE_CURRENCIES
 from common import COLORS
 
 from data_manage import prepare_crypto_list
-from data_manage import preapre_data_for_crypto_main_line_graph, prepare_data_for_fear_and_greed_index, preapre_data_for_rsi_indicator, preapre_data_for_ma_50_and_200_indicator
+from data_manage import preapre_data_for_crypto_main_line_graph, prepare_data_for_fear_and_greed_index, preapre_data_for_rsi_indicator, preapre_data_for_ma_50_and_200_indicator, save_exchange_rates, get_from_cache_database
 
 
 CRYPTO_CURRENCIES = prepare_crypto_list()
@@ -49,10 +49,14 @@ def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_d
 
     from forex_python.converter import CurrencyRates
 
-    currency_rates = CurrencyRates()
-    usd_rate = currency_rates.get_rate('USD', base_currency)
-    df=df_main_graph.copy(deep=True)
+    try:
+        currency_rates = CurrencyRates()
+        usd_rate = currency_rates.get_rate('USD', base_currency)
+    except:
+        date, usd_price, pln_price, eur_price, gbp_price, chf_price = get_from_cache_database(base_currency)
+        usd_rate=1/usd_price
 
+    df=df_main_graph.copy(deep=True)
     df=df[start_time_difference:end_time_difference]
 
     for currency in CRYPTO_CURRENCIES:
@@ -94,18 +98,18 @@ def get_exchange_rates(base_currency):
         gbp_price = round(currency_rates.get_rate(base_currency, 'GBP'),2)
         chf_price = round(currency_rates.get_rate(base_currency, 'CHF'),2)
 
-        alert_message = "Everthing ok"
+        if base_currency=="USD":
+            save_exchange_rates(usd_price, pln_price, eur_price, gbp_price, chf_price)
+
+        alert_message = "Everything ok"
         color="info"
         is_open=False
 
     except:
-        usd_price = 1
-        pln_price = 0.23
-        eur_price = 1.07
-        gbp_price = 1.20
-        chf_price = 1.07
 
-        alert_message = "Warning! Currency rates are out of date! (of 20/03/2023)"
+        date, usd_price, pln_price, eur_price, gbp_price, chf_price = get_from_cache_database(base_currency)
+
+        alert_message = "Warning! Currency rates are out of date! (currency prices of the day {})".format(date)
         color="warning"
         is_open=True
 
@@ -130,8 +134,12 @@ def create_ranking_table(base_currency):
 
     from forex_python.converter import CurrencyRates
 
-    currency_rates = CurrencyRates()
-    usd_rate = currency_rates.get_rate('USD', base_currency)
+    try:
+        currency_rates = CurrencyRates()
+        usd_rate = currency_rates.get_rate('USD', base_currency)
+    except:
+        date, usd_price, pln_price, eur_price, gbp_price, chf_price = get_from_cache_database(base_currency)
+        usd_rate=1/usd_price
 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
 
