@@ -244,7 +244,11 @@ def display_fng_series(time_range):
     else:
         df_cut = df_fng
 
-    fig = px.line(df_cut, x = 'timestamp', y='value')
+    fig = px.line(df_cut, x = 'timestamp', y='value',
+                  labels={
+                     "value": "FNG value",
+                     "timestamp": "Date"
+                 })
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False, autorange="reversed")
