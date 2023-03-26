@@ -114,8 +114,8 @@ def get_exchange_rates(base_currency):
 
         date, usd_price, pln_price, eur_price, gbp_price, chf_price = get_from_cache_database(base_currency)
 
-        alert_message = "Warning! Currency rates are out of date! (currency prices of the day {})".format(date)
-        color="warning"
+        alert_message = "Warning! Currency rates are out of date! (retrieved of {}). Be careful.".format(date)
+        color="primary"
         is_open=True
 
     return usd_price, pln_price, eur_price, gbp_price, chf_price, alert_message, color, is_open
