@@ -338,7 +338,12 @@ def display_ma_series(types, window, period):
         ma_types.append('EMA')
     ma_types.append('BTC price')
 
-    fig = px.line(df_ma_cut, x = 'timestamp', y=ma_types, title = "Moving Averages Index for X:BTC-USD indicator")
+    fig = px.line(df_ma_cut, x = 'timestamp', y=ma_types, 
+                  title = "Moving Averages Index for X:BTC-USD indicator",
+                  labels={
+                     "value": "BTC Price",
+                     "timestamp": "Date"
+                 })
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
