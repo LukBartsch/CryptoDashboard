@@ -278,7 +278,12 @@ def display_rsi_series(time_range):
         df_cut = df_rsi
 
     fig = px.scatter(df_cut, x="timestamp", y="value", color="value", 
-                color_continuous_scale=["red", "yellow", "green"], title = "RSI Index for X:BTC-USD indicator")
+                color_continuous_scale=["red", "yellow", "green"], 
+                title = "RSI Index for X:BTC-USD indicator",
+                labels={
+                     "value": "RSI value",
+                     "timestamp": "Date"
+                 })
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_traces(mode='markers+lines')
