@@ -192,11 +192,12 @@ body {
 .main-table-options{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center !important;
     max-width: 1100px;
-    margin: auto;
+    margin: auto !important;
     border-collapse: separate;
     border-spacing: 50px 0px;
+
 }
 
 .main-table-options #crypto-table{
