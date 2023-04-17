@@ -120,6 +120,10 @@ current_prices_table = (
                         },
                         'padding-top': '25px'
                 },
+                {
+                    'if': {'row_index': 'odd'},
+                    'backgroundColor': 'rgb(30, 30, 30)',
+                }
             ]
         ),
     ],
