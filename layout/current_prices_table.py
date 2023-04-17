@@ -86,6 +86,7 @@ current_prices_table = (
         dash_table.DataTable(
             id='crypto-table',
             merge_duplicate_headers=True,
+            fill_width=False,
             style_header={
                 'backgroundColor': 'rgb(30, 30, 30)',
                 'color': '#007eff',
@@ -97,7 +98,9 @@ current_prices_table = (
                 'padding': '10px',
                 'backgroundColor': COLORS['background'],
                 'color': COLORS['text'],
-                'textAlign': 'center'
+                'textAlign': 'center',
+                'marginLeft': 'auto',
+                'marginRight': 'auto'
             },
             style_data_conditional=[
                 {
@@ -127,6 +130,6 @@ current_prices_table = (
             ]
         ),
     ],
-        className="main-table-options"
+        className='main-table-options'
     )
  )
