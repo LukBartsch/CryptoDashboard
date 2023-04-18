@@ -29,6 +29,7 @@ Data is collected in real time from several financial services with free API, su
 * Dash/Plotly
 * Pandas
 * Python-Forex
+* SQLAlchemy (SQLite as cache memory)
 
 
 ## Features
@@ -39,13 +40,15 @@ The main view with a graph of historical cryptocurrency prices dynamically chang
 
 The chart shows all selected cryptocurrencies and compares them with the base currency. Below the graph there is a dynamic ranking that shows the ten most popular cryptocurrencies and their current parameters.
 
-![image](https://user-images.githubusercontent.com/98742733/218312289-19e871c0-c1c0-4f13-a24b-933e59fa0f13.png)
+![image](https://user-images.githubusercontent.com/98742733/232784354-09cf7e54-7765-4bea-b344-0b0086ee0a78.png)
+
 
 Other major financial indicators of the cryptocurrency market presented in the application:
 
 * Fear and Greed Index
 
-![image](https://user-images.githubusercontent.com/98742733/218311094-2a34c940-31f2-443c-80a7-dc40b3069744.png)
+![image](https://user-images.githubusercontent.com/98742733/232784901-92ea0267-b407-4cef-b08a-aa19bb189ee9.png)
+
 
 * Bitcoin Relative Strength Index
 
