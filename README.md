@@ -38,7 +38,8 @@ The main view with a graph of historical cryptocurrency prices dynamically chang
 
 ![image](https://user-images.githubusercontent.com/98742733/217930069-8d56adfd-58b8-4da6-9352-4ca8bc934632.png)
 
-The chart shows all selected cryptocurrencies and compares them with the base currency. Below the graph there is a dynamic ranking that shows the ten most popular cryptocurrencies and their current parameters.
+The chart shows all selected cryptocurrencies and compares them with the base currency. Below the graph there is a dynamic ranking that shows the ten most popular cryptocurrencies and their current parameters. The application uses the SQLite database as a cache, which stores the most current currency prices in case
+there is a problem with access to the Python-Forex library.
 
 ![image](https://user-images.githubusercontent.com/98742733/232784354-09cf7e54-7765-4bea-b344-0b0086ee0a78.png)
 
