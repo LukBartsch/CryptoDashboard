@@ -77,8 +77,9 @@ def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENC
             data = json_data["data"]
 
             df_temp = pd.DataFrame(data)
-            df_temp[currency] = pd.to_numeric(df_temp['priceUsd'], errors='coerce').fillna(0, downcast='infer')
-            df_temp['date'] = pd.to_datetime(df_temp['date'], dayfirst=False, utc=False, format='%Y-%m-%d')
+            df_temp[currency] = pd.to_numeric(df_temp['priceUsd'], errors='coerce').fillna(0)
+            df_temp['date'] = pd.to_datetime(df_temp['date'], dayfirst=False, utc=False, format='ISO8601')      
+
 
             if currency == 'bitcoin':
                 df_main_graph=pd.DataFrame()
@@ -91,6 +92,7 @@ def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENC
         # df_main_graph.to_csv('crypto-usd.csv', index=False)
     except:
         df_main_graph=pd.DataFrame()
+
 
     return df_main_graph
 
@@ -108,7 +110,7 @@ def prepare_data_for_fear_and_greed_index():
         data = json_data["data"]
         df_fng = pd.DataFrame(data)
 
-        df_fng['value'] = pd.to_numeric(df_fng['value'], errors='coerce').fillna(0, downcast='infer')
+        df_fng['value'] = pd.to_numeric(df_fng['value'], errors='coerce').fillna(0)
 
         df_fng_temp = df_fng.loc[[0,1,6,29,364]]
 

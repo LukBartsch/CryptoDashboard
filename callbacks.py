@@ -93,24 +93,62 @@ alert_message=True
 )
 def get_exchange_rates(base_currency):
 
-    from forex_python.converter import CurrencyRates
+    from easy_exchange_rates import API
 
     try:
-        currency_rates = CurrencyRates()
-        usd_price = round(currency_rates.get_rate(base_currency, 'USD'),2)
-        pln_price = round(currency_rates.get_rate(base_currency, 'PLN'),2)
-        eur_price = round(currency_rates.get_rate(base_currency, 'EUR'),2)
-        gbp_price = round(currency_rates.get_rate(base_currency, 'GBP'),2)
-        chf_price = round(currency_rates.get_rate(base_currency, 'CHF'),2)
+        
 
-        if base_currency=="USD":
+        api = API()
+        df = api.get_exchange_rates(
+            base_currency="EUR", 
+            start_date=datetime.date.today()-datetime.timedelta(days=5),
+            end_date=datetime.date.today(),
+            targets=["USD","GBP", "PLN", "CHF"]
+        )
+
+        if base_currency == "EUR":
+            eur_price = 1
+            usd_price = round(float(df['USD'].iloc[-1]),2)
+            pln_price = round(float(df['PLN'].iloc[-1]),2)
+            gbp_price = round(float(df['GBP'].iloc[-1]),2)
+            chf_price = round(float(df['CHF'].iloc[-1]),2)
+
+        elif base_currency == "USD":
+            usd_price = 1
+            eur_price = round(1/float(df['USD'].iloc[-1]),2)
+            pln_price = round(float(df['PLN'].iloc[-1])/float(df['USD'].iloc[-1]),2)
+            gbp_price = round(float(df['GBP'].iloc[-1])/float(df['USD'].iloc[-1]),2)
+            chf_price = round(float(df['CHF'].iloc[-1])/float(df['USD'].iloc[-1]),2)
+
             save_exchange_rates(usd_price, pln_price, eur_price, gbp_price, chf_price)
+
+        elif base_currency == "PLN":
+            pln_price = 1
+            usd_price = round(float(df['USD'].iloc[-1])/float(df['PLN'].iloc[-1]),2)
+            eur_price = round(1/float(df['PLN'].iloc[-1]),2)
+            gbp_price = round(float(df['GBP'].iloc[-1])/float(df['PLN'].iloc[-1]),2)
+            chf_price = round(float(df['CHF'].iloc[-1])/float(df['PLN'].iloc[-1]),2)
+        
+        elif base_currency == "GBP":
+            gbp_price = 1
+            usd_price = round(float(df['USD'].iloc[-1])/float(df['GBP'].iloc[-1]),2)
+            eur_price = round(1/float(df['GBP'].iloc[-1]),2)
+            pln_price = round(float(df['PLN'].iloc[-1])/float(df['GBP'].iloc[-1]),2)
+            chf_price = round(float(df['CHF'].iloc[-1])/float(df['GBP'].iloc[-1]),2)
+        
+        elif base_currency == "CHF":
+            chf_price = 1
+            eur_price = round(1/float(df['CHF'].iloc[-1]),2)
+            usd_price = round(float(df['USD'].iloc[-1])/float(df['CHF'].iloc[-1]),2)
+            pln_price = round(float(df['PLN'].iloc[-1])/float(df['CHF'].iloc[-1]),2)
+            gbp_price = round(float(df['GBP'].iloc[-1])/float(df['CHF'].iloc[-1]),2)
+
 
         alert_message = "Everything ok"
         color="info"
         is_open=False
 
-    except:
+    except Exception as e:
 
         date, usd_price, pln_price, eur_price, gbp_price, chf_price = get_from_cache_database(base_currency)
 
