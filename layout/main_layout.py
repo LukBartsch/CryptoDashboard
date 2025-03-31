@@ -2,7 +2,7 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-from layout.crypto_graph_section import main_crypto_title, crypto_and_date_section, crypto_graph
+from layout.crypto_graph_section import main_crypto_title, crypto_and_date_section, crypto_graph, main_warning_message
 from layout.fear_and_greed_index import fng_index_table, fng_index_line_graph, fng_index_info
 from layout.rsi_indicator import rsi_select_period, rsi_index_line_graph, rsi_index_info
 from layout.current_prices_table import crypto_amount, current_prices_table, warning_message
@@ -16,6 +16,7 @@ from layout.moving_averages import ma_select_config, ma_graph, ma_indicator_info
 layout = html.Div(className="main", children=[
 
     main_crypto_title,
+    main_warning_message,
     crypto_and_date_section,
     crypto_graph,
 

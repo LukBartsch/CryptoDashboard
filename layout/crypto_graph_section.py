@@ -1,4 +1,5 @@
 from dash import html, dcc
+import dash_bootstrap_components as dbc
 
 from datetime import datetime, timedelta
 
@@ -12,6 +13,21 @@ main_crypto_title = (
     html.H1(
         children="Dash application for cryptocurrencies monitoring",
         className="main-header"
+    )
+)
+
+
+main_warning_message = (
+
+    html.Section(children=[
+        dbc.Alert(
+            color="warning",
+            id="main-alert",
+            dismissable=True,
+            is_open=False,
+        ),
+    ],
+        className='main-options'
     )
 )
 

@@ -6,9 +6,10 @@ import plotly.express as px
 
 import pandas as pd
 import datetime
-import time
 import requests
 import json
+from dateutil import parser
+from forex_python.converter import CurrencyRates
 
 from common import BASE_CURRENCIES
 from common import COLORS
@@ -27,7 +28,10 @@ default_end_time = datetime.datetime.now()
 df_main_graph = preapre_data_for_crypto_main_line_graph(default_start_time, default_end_time, CRYPTO_CURRENCIES)
 
 @app.callback(
-    Output("crypto-graph", "figure"), 
+    Output("crypto-graph", "figure"),
+    Output('main-alert', 'children'),
+    Output('main-alert', 'color'),
+    Output('main-alert', 'is_open') ,
     [Input("crypto-dropdown", "value"),
      Input('base-currency', 'value'),
      Input('start-date-picker', 'date'),
@@ -35,19 +39,20 @@ df_main_graph = preapre_data_for_crypto_main_line_graph(default_start_time, defa
 )
 def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_date):
 
+    alert_message = ""
+    color="primary"
+    is_open=False
 
-    from dateutil import parser
+    
     sent_start_time=parser.isoparse(start_date)
     sent_end_time=parser.isoparse(end_date)
 
-    
     start_time_difference = sent_start_time - default_start_time
     start_time_difference = start_time_difference.days
 
     end_time_difference = sent_end_time - default_start_time
     end_time_difference = end_time_difference.days
 
-    from forex_python.converter import CurrencyRates
 
     try:
         currency_rates = CurrencyRates()
@@ -60,10 +65,16 @@ def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_d
     df=df[start_time_difference:end_time_difference]
 
     for currency in CRYPTO_CURRENCIES:
-        df[currency]=df[currency].multiply(usd_rate)
+        try:
+            df[currency]=df[currency].multiply(usd_rate)
+        except:
+            df[currency]=df[currency].multiply(1)
 
+    if len(df)==0:
+        alert_message = "Warning! Problem with getting data from CoinCap API! Free plan has probably been exhausted."
+        color="primary"
+        is_open=True    
 
-    # df = pd.read_csv('saved_data/crypto-usd.csv')
     fig = px.line(df, x = 'date', y=crypto_dropdown,
                   labels={
                      "bitcoin": "Price",
@@ -74,7 +85,7 @@ def display_main_crypto_series(crypto_dropdown, base_currency, start_date, end_d
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(showgrid=False, zeroline=False)
-    return fig
+    return fig, alert_message, color, is_open
 
 
 alert_message=True
@@ -89,7 +100,7 @@ alert_message=True
      Output('alert', 'children'),
      Output('alert', 'color'),
      Output('alert', 'is_open')],
-    [Input('base-currency', 'value')]
+    [Input('base-currency', 'value')],
 )
 def get_exchange_rates(base_currency):
 
@@ -314,14 +325,17 @@ def display_rsi_series(time_range):
         df_cut = df_rsi[:337]
     else:
         df_cut = df_rsi
-
-    fig = px.scatter(df_cut, x="timestamp", y="value", color="value", 
-                color_continuous_scale=["red", "yellow", "green"], 
-                title = "RSI Index for X:BTC-USD indicator",
-                labels={
-                     "value": "RSI value",
-                     "timestamp": "Date"
-                 })
+    try:
+        fig = px.scatter(df_cut, x="timestamp", y="value", color="value", 
+                    color_continuous_scale=["red", "yellow", "green"], 
+                    title = "RSI Index for X:BTC-USD indicator",
+                    labels={
+                        "value": "RSI value",
+                        "timestamp": "Date"
+                    })
+    except:
+        fig = px.scatter(df_cut, title = "RSI Index for X:BTC-USD indicator")
+        
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_traces(mode='markers+lines')
@@ -376,12 +390,17 @@ def display_ma_series(types, window, period):
         ma_types.append('EMA')
     ma_types.append('BTC price')
 
-    fig = px.line(df_ma_cut, x = 'timestamp', y=ma_types, 
-                  title = "Moving Averages Index for X:BTC-USD indicator",
-                  labels={
-                     "value": "BTC Price",
-                     "timestamp": "Date"
-                 })
+    try:
+        fig = px.line(df_ma_cut, x = 'timestamp', y=ma_types, 
+                    title = "Moving Averages Index for X:BTC-USD indicator",
+                    labels={
+                        "value": "BTC Price",
+                        "timestamp": "Date"
+                    })
+    except:
+        fig = px.line(df_ma_cut, title = "Moving Averages Index for X:BTC-USD indicator")
+
+
     fig.layout.plot_bgcolor = COLORS['background']
     fig.layout.paper_bgcolor = COLORS['background']
     fig.update_xaxes(showgrid=False, zeroline=False)
