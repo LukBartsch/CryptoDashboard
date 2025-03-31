@@ -10,6 +10,11 @@ from sqlalchemy import Column, String, Integer, Float
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+
+api_key_polygon = os.environ['api_key_polygon']
+api_key_coincap = os.environ['api_key_coincap']
+
+
 engine = create_engine('sqlite:///exchange_rates_cache.sqlite', echo=False)
 base = declarative_base()
 db_session = sessionmaker(bind=engine)
@@ -40,9 +45,6 @@ class ExchangeRates(base):
 base.metadata.create_all(engine)
 
 
-api_key_polygon = os.environ['api_key_polygon']
-
-
 def prepare_crypto_list():
 
     coincapapi_url = 'http://api.coincap.io/v2/assets?limit=10'
@@ -67,7 +69,7 @@ def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENC
     try:
         for currency in CRYPTO_CURRENCIES:
 
-            url = f"http://api.coincap.io/v2/assets/{currency}/history?interval=d1&start={unix_start_time}&end={unix_end_time}"
+            url = f"http://rest.coincap.io/v3/assets/{currency}/history?apiKey={api_key_coincap}&interval=d1&start={unix_start_time}&end={unix_end_time}"
 
             payload = {}
             headers= {}
@@ -89,9 +91,9 @@ def preapre_data_for_crypto_main_line_graph(start_time, end_time, CRYPTO_CURRENC
                 df_main_graph=df_main_graph.merge(df_temp, on='date', how='left')
                 df_main_graph = df_main_graph.drop(labels=["priceUsd", "time"], axis=1)
 
-        # df_main_graph.to_csv('crypto-usd.csv', index=False)
     except:
-        df_main_graph=pd.DataFrame()
+        columns = ["date"] + CRYPTO_CURRENCIES
+        df_main_graph=pd.DataFrame(columns=columns)
 
 
     return df_main_graph

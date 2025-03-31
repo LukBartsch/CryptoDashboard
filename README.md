@@ -1,6 +1,6 @@
 
 # Crypto Dashboard
-Web application for data visualization. You can see [_here_](https://crypto-dashboard-6w9a.onrender.com/).
+Web application for data visualization.
 
 
 ## Table of Contents
@@ -66,6 +66,7 @@ The visitor has the option of choosing the displayed data not only because of th
 * Rename .env.example to `.env` and set your value (get free API key from polygon.io platfrom)
 ```
 api_key_polygon = <your_api_key>
+api_key_coincap = <your_api_key>
 ```
 
 * Install packages from `requirements.txt`
@@ -77,7 +78,7 @@ pip install -r requirements.txt
 python crypto_dashboard.py
 ```
 ## Project Status
-Application deployed in beta version on free cloud hosting that is synchronized with GitHub. However, when starting the application for the first time, wait a few seconds to wake up the server on which the application is installed.
+Due to major restrictions on access to free data (since 03/2025) the application is currently available only as a project on Github.
 
 
 ## Contributing
